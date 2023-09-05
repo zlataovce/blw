@@ -74,10 +74,50 @@ final class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
 			case METHOD_HANDLE_CONSTANT ->
 					mv.visitLdcInsn(Util.unwrapMethodHandle(((OfMethodHandle) constant).value()));
 			case DYNAMIC_CONSTANT -> mv.visitLdcInsn(Util.unwrapConstantDynamic(((OfDynamic) constant).value()));
-			case LONG_CONSTANT -> mv.visitLdcInsn(((OfLong) constant).value());
-			case DOUBLE_CONSTANT -> mv.visitLdcInsn(((OfDouble) constant).value());
-			case INT_CONSTANT -> mv.visitLdcInsn(((OfInt) constant).value());
-			case FLOAT_CONSTANT -> mv.visitLdcInsn(((OfFloat) constant).value());
+			case LONG_CONSTANT -> {
+				long value = ((OfLong) constant).value();
+				if(value == 0L) {
+					mv.visitInsn(LCONST_0);
+				} else if(value == 1L) {
+					mv.visitInsn(LCONST_1);
+				} else {
+					mv.visitLdcInsn(value);
+				}
+			}
+			case DOUBLE_CONSTANT -> {
+				double value = ((OfDouble) constant).value();
+				if(value == 0D) {
+					mv.visitInsn(DCONST_0);
+				} else if(value == 1D) {
+					mv.visitInsn(DCONST_1);
+				} else {
+					mv.visitLdcInsn(value);
+				}
+			}
+			case INT_CONSTANT -> {
+				int value = ((OfInt) constant).value();
+				if(value >= -1 && value <= 5) {
+					mv.visitInsn(ICONST_0 + value);
+				} else if(value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+					mv.visitIntInsn(BIPUSH, value);
+				} else if(value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+					mv.visitIntInsn(SIPUSH, value);
+				} else {
+					mv.visitLdcInsn(value);
+				}
+			}
+			case FLOAT_CONSTANT -> {
+				float value = ((OfFloat) constant).value();
+				if(value == 0F) {
+					mv.visitInsn(FCONST_0);
+				} else if(value == 1F) {
+					mv.visitInsn(FCONST_1);
+				} else if(value == 2F) {
+					mv.visitInsn(FCONST_2);
+				} else {
+					mv.visitLdcInsn(value);
+				}
+			}
 			case TYPE_CONSTANT -> mv.visitLdcInsn(Util.unwrapType(((OfType) constant).value()));
 		}
 	}
