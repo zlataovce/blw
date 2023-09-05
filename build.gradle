@@ -7,15 +7,20 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven-publish'
 
-    repositories {
-        mavenCentral()
-        maven { url = 'https://jitpack.io' }
-    }
+    sourceCompatibility = 17
+    targetCompatibility = 17
 
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(17)
         }
+
+        withSourcesJar()
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://jitpack.io' }
     }
 
     configurations {
@@ -32,12 +37,6 @@ subprojects {
 
     test {
         useJUnitPlatform()
-    }
-
-    // generate sources jar
-    task sourcesJar(type: Jar) {
-        from sourceSets.main.allSource
-        archiveClassifier.set('sources')
     }
 
     publishing {
