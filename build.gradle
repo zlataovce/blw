@@ -5,10 +5,17 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
     repositories {
         mavenCentral()
         maven { url = 'https://jitpack.io' }
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
     }
 
     configurations {
@@ -25,8 +32,27 @@ subprojects {
 
     test {
         useJUnitPlatform()
-        jvmArgs '--enable-preview'
     }
 
-    tasks.withType(JavaCompile)*.options*.compilerArgs*.add '--enable-preview'
+    // generate sources jar
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        archiveClassifier.set('sources')
+    }
+
+    publishing {
+        repositories {
+            mavenLocal()
+            maven {
+                name = 'sources-repo'
+                url = 'file:///tmp/sources-repo'
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+            }
+        }
+    }
 }

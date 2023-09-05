@@ -31,19 +31,27 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		return constant;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <C extends Constant> ConstantInstruction<C> wrap(C constant) {
-		//noinspection unchecked
-		return (ConstantInstruction<C>) switch (constant) {
-			case OfString c -> new String(c);
-			case OfMethodHandle c -> new MethodHandle(c);
-			case OfType c -> new Type(c);
-			case OfDynamic c -> new Dynamic(c);
-			case OfLong c -> new Long(c);
-			case OfDouble c -> new Double(c);
-			case OfInt c -> new Int(c);
-			case OfFloat c -> new Float(c);
-			default -> throw new IllegalStateException("Unexpected value: " + constant);
-		};
+		if (constant instanceof OfString c) {
+			return (ConstantInstruction<C>) new String(c);
+		} else if (constant instanceof OfMethodHandle c) {
+			return (ConstantInstruction<C>) new MethodHandle(c);
+		} else if (constant instanceof OfType c) {
+			return (ConstantInstruction<C>) new Type(c);
+		} else if (constant instanceof OfDynamic c) {
+			return (ConstantInstruction<C>) new Dynamic(c);
+		} else if (constant instanceof OfLong c) {
+			return (ConstantInstruction<C>) new Long(c);
+		} else if (constant instanceof OfDouble c) {
+			return (ConstantInstruction<C>) new Double(c);
+		} else if (constant instanceof OfInt c) {
+			return (ConstantInstruction<C>) new Int(c);
+		} else if (constant instanceof OfFloat c) {
+			return (ConstantInstruction<C>) new Float(c);
+		} else {
+			throw new IllegalStateException("Unexpected value: " + constant);
+		}
 	}
 
 	public static final class String extends ConstantInstruction<OfString> {

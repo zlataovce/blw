@@ -97,16 +97,25 @@ public final class Util {
 	}
 
 	public static Object unwrapConstant(Constant constant) {
-		return switch (constant) {
-			case OfString c -> c.value();
-			case OfMethodHandle c -> unwrapMethodHandle(c.value());
-			case OfType c -> unwrapType(c.value());
-			case OfDynamic c -> unwrapConstantDynamic(c.value());
-			case OfLong c -> c.value();
-			case OfDouble c -> c.value();
-			case OfInt c -> c.value();
-			case OfFloat c -> c.value();
-		};
+		if (constant instanceof OfString c) {
+			return c.value();
+		} else if (constant instanceof OfMethodHandle c) {
+			return unwrapMethodHandle(c.value());
+		} else if (constant instanceof OfType c) {
+			return unwrapType(c.value());
+		} else if (constant instanceof OfDynamic c) {
+			return unwrapConstantDynamic(c.value());
+		} else if (constant instanceof OfLong c) {
+			return c.value();
+		} else if (constant instanceof OfDouble c) {
+			return c.value();
+		} else if (constant instanceof OfInt c) {
+			return c.value();
+		} else if (constant instanceof OfFloat c) {
+			return c.value();
+		} else {
+			throw new IllegalStateException("Unexpected value: " + constant);
+		}
 	}
 
 	public static Element wrapElement(Object value) {

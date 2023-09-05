@@ -229,19 +229,32 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			}
 			return;
 		}
-		av.visit(name, switch (element) {
-			case ElementString e -> e.value();
-			case ElementLong e -> e.value();
-			case ElementDouble e -> e.value();
-			case ElementInt e -> e.value();
-			case ElementFloat e -> e.value();
-			case ElementChar e -> e.value();
-			case ElementShort e -> e.value();
-			case ElementByte e -> e.value();
-			case ElementBoolean e -> e.value();
-			case ElementType e -> Type.getType(e.value().descriptor());
-			default -> throw new IllegalStateException("Unexpected value: " + element);
-		});
+		Object value;
+		if (element instanceof ElementString e) {
+			value = e.value();
+		} else if (element instanceof ElementLong e) {
+			value = e.value();
+		} else if (element instanceof ElementDouble e) {
+			value = e.value();
+		} else if (element instanceof ElementInt e) {
+			value = e.value();
+		} else if (element instanceof ElementFloat e) {
+			value = e.value();
+		} else if (element instanceof ElementChar e) {
+			value = e.value();
+		} else if (element instanceof ElementShort e) {
+			value = e.value();
+		} else if (element instanceof ElementByte e) {
+			value = e.value();
+		} else if (element instanceof ElementBoolean e) {
+			value = e.value();
+		} else if (element instanceof ElementType e) {
+			value = Type.getType(e.value().descriptor());
+		} else {
+			throw new IllegalStateException("Unexpected value: " + element);
+		}
+
+		av.visit(name, value);
 	}
 
 	// Copy from ClassReader

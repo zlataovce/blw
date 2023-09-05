@@ -23,23 +23,38 @@ public final class ExecutionEngines {
 	}
 
 	public static void execute(ExecutionEngine engine, Instruction instruction) {
-		switch (instruction) {
-			case SimpleInstruction sim -> engine.execute(sim);
-			case LookupSwitchInstruction lsw -> engine.execute(lsw);
-			case TableSwitchInstruction tsw -> engine.execute(tsw);
-			case ConditionalJumpInstruction cj -> engine.execute(cj);
-			case ImmediateJumpInstruction ij -> engine.execute(ij);
-			case VarInstruction var -> engine.execute(var);
-			case VariableIncrementInstruction vi -> engine.execute(vi);
-			case MethodInstruction m -> engine.execute(m);
-			case FieldInstruction f -> engine.execute(f);
-			case InvokeDynamicInstruction indy -> engine.execute(indy);
-			case AllocateInstruction a -> engine.execute(a);
-			case CheckCastInstruction cc -> engine.execute(cc);
-			case InstanceofInstruction i -> engine.execute(i);
-			case ConstantInstruction<?> c -> engine.execute(c);
-			case PrimitiveConversionInstruction i -> engine.execute(i);
-			default -> engine.execute(instruction);
+		if (instruction instanceof SimpleInstruction sim) {
+			engine.execute(sim);
+		} else if (instruction instanceof LookupSwitchInstruction lsw) {
+			engine.execute(lsw);
+		} else if (instruction instanceof TableSwitchInstruction tsw) {
+			engine.execute(tsw);
+		} else if (instruction instanceof ConditionalJumpInstruction cj) {
+			engine.execute(cj);
+		} else if (instruction instanceof ImmediateJumpInstruction ij) {
+			engine.execute(ij);
+		} else if (instruction instanceof VarInstruction var) {
+			engine.execute(var);
+		} else if (instruction instanceof VariableIncrementInstruction vi) {
+			engine.execute(vi);
+		} else if (instruction instanceof MethodInstruction m) {
+			engine.execute(m);
+		} else if (instruction instanceof FieldInstruction f) {
+			engine.execute(f);
+		} else if (instruction instanceof InvokeDynamicInstruction indy) {
+			engine.execute(indy);
+		} else if (instruction instanceof AllocateInstruction a) {
+			engine.execute(a);
+		} else if (instruction instanceof CheckCastInstruction cc) {
+			engine.execute(cc);
+		} else if (instruction instanceof InstanceofInstruction i) {
+			engine.execute(i);
+		} else if (instruction instanceof ConstantInstruction<?>) {
+			engine.execute((ConstantInstruction<?>) instruction);
+		} else if (instruction instanceof PrimitiveConversionInstruction i) {
+			engine.execute(i);
+		} else {
+			engine.execute(instruction);
 		}
 	}
 }
