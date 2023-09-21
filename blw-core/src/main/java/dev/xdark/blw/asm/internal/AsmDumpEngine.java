@@ -172,7 +172,7 @@ final class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
 			if (dimensions == 1) {
 				ClassType component = arrayType.componentType();
 				if (!(component instanceof PrimitiveType primitiveType)) {
-					mv.visitTypeInsn(Opcodes.ANEWARRAY, descriptor);
+					mv.visitTypeInsn(Opcodes.ANEWARRAY, component.descriptor());
 				} else {
 					mv.visitIntInsn(Opcodes.NEWARRAY, primitiveType.kind());
 				}
