@@ -23,6 +23,9 @@ public final class GenericClassFileView implements ClassFileView {
 	private final List<Method> methods;
 	private final List<Field> fields;
 	private final List<InnerClass> innerClasses;
+	private final String outerClass ;
+	private final String outerMethodName;
+	private final String outerMethodDescriptor ;
 	private final InstanceType nestHost;
 	private final List<InstanceType> nestMembers;
 	private final String sourceFile, sourceDebug;
@@ -32,6 +35,7 @@ public final class GenericClassFileView implements ClassFileView {
 	public GenericClassFileView(JavaVersion version, ConstantPool pool, int accessFlags, InstanceType type,
 								InstanceType superClass, String signature, List<InstanceType> interfaces,
 								List<Method> methods, List<Field> fields, List<InnerClass> innerClasses,
+								String outerClass, String outerMethodName, String outerMethodDescriptor,
 								InstanceType nestHost, List<InstanceType> nestMembers, String sourceFile, String sourceDebug,
 								List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations) {
 		this.version = version;
@@ -44,6 +48,9 @@ public final class GenericClassFileView implements ClassFileView {
 		this.methods = methods;
 		this.fields = fields;
 		this.innerClasses = innerClasses;
+		this.outerMethodName = outerMethodName;
+		this.outerMethodDescriptor = outerMethodDescriptor;
+		this.outerClass = outerClass;
 		this.nestHost = nestHost;
 		this.nestMembers = nestMembers;
 		this.sourceFile = sourceFile;
@@ -105,6 +112,21 @@ public final class GenericClassFileView implements ClassFileView {
 	@Override
 	public List<InnerClass> innerClasses() {
 		return innerClasses;
+	}
+
+	@Override
+	public @Nullable String outerClass() {
+		return outerClass;
+	}
+
+	@Override
+	public @Nullable String outerMethodName() {
+		return outerMethodName;
+	}
+
+	@Override
+	public @Nullable String outerMethodDescriptor() {
+		return outerMethodDescriptor;
 	}
 
 	@Override

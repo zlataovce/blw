@@ -26,6 +26,9 @@ public final class GenericClassBuilder implements ClassBuilder {
 	private final List<AnnotationBuilder> invisibleRuntimeAnnotation = new ArrayList<>();
 	private final List<Reflectable<Method>> methods = new ArrayList<>();
 	private final List<Reflectable<Field>> fields = new ArrayList<>();
+	private String outerClass;
+	private String outerMethodName;
+	private String outerMethodDescriptor;
 	private List<InnerClass> innerClasses = List.of();
 	private List<InstanceType> nestMembers = List.of();
 	private InstanceType nestHost;
@@ -150,6 +153,20 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder outerClass(String owner) {
+		outerClass = owner;
+		return this;
+	}
+
+	@Override
+	public ClassBuilder outerMethod(String owner, String name, String descriptor) {
+		outerClass = owner;
+		outerMethodName = name;
+		outerMethodDescriptor = descriptor;
+		return this;
+	}
+
+	@Override
 	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
 		this.nestHost = nestHost;
 		return this;
@@ -191,6 +208,9 @@ public final class GenericClassBuilder implements ClassBuilder {
 				buildList(methods),
 				buildList(fields),
 				innerClasses,
+				outerClass,
+				outerMethodName,
+				outerMethodDescriptor,
 				nestHost,
 				nestMembers,
 				sourceFile,

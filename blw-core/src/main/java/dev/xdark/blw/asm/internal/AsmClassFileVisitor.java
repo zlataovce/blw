@@ -80,6 +80,15 @@ final class AsmClassFileVisitor extends ClassVisitor {
 	}
 
 	@Override
+	public void visitOuterClass(String owner, String name, String descriptor) {
+		if (name == null) {
+			classBuilder.outerClass(owner);
+		} else {
+			classBuilder.outerMethod(owner, name, descriptor);
+		}
+	}
+
+	@Override
 	public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
 		return Util.visitAnnotation(classBuilder, descriptor, visible);
 	}

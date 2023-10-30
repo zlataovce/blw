@@ -123,6 +123,18 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder outerClass(String owner) {
+		delegate.outerClass(owner);
+		return this;
+	}
+
+	@Override
+	public ClassBuilder outerMethod(String owner, String name, String descriptor) {
+		delegate.outerMethod(owner, name, descriptor);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
 		delegate.nestHost(nestHost);
 		return this;

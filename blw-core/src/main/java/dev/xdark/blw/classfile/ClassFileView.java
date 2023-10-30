@@ -29,6 +29,15 @@ public non-sealed interface ClassFileView extends Accessible, Annotated, Signed 
 	List<InnerClass> innerClasses();
 
 	@Nullable
+	String outerClass();
+
+	@Nullable
+	String outerMethodName();
+
+	@Nullable
+	String outerMethodDescriptor();
+
+	@Nullable
 	InstanceType nestHost();
 
 	@Nullable

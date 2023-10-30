@@ -154,6 +154,12 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			if (nestMembers != null) for (InstanceType nestMember : nestMembers) {
 				writer.visitNestMember(nestMember.internalName());
 			}
+
+			String outerClass = classFileView.outerClass();
+			String outerMethodName = classFileView.outerMethodName();
+			String outerMethodDescriptor = classFileView.outerMethodDescriptor();
+			if (outerClass != null)
+				writer.visitOuterClass(outerClass, outerMethodName, outerMethodDescriptor);
 		}
 		StraightforwardSimulation simulation = new StraightforwardSimulation();
 		LabelMappingImpl mapping = new LabelMappingImpl();
