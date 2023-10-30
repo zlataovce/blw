@@ -171,10 +171,10 @@ final class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
 			int dimensions = arrayType.dimensions();
 			if (dimensions == 1) {
 				ClassType component = arrayType.componentType();
-				if (!(component instanceof PrimitiveType primitiveType)) {
-					mv.visitTypeInsn(Opcodes.ANEWARRAY, component.descriptor());
-				} else {
-					mv.visitIntInsn(Opcodes.NEWARRAY, primitiveType.kind());
+				if (component instanceof ObjectType objectComponent) {
+					mv.visitTypeInsn(Opcodes.ANEWARRAY, objectComponent.internalName());
+				} else if (component instanceof PrimitiveType primitiveComponent) {
+					mv.visitIntInsn(Opcodes.NEWARRAY, primitiveComponent.kind());
 				}
 			} else {
 				mv.visitMultiANewArrayInsn(descriptor, dimensions);
