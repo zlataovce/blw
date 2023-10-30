@@ -165,6 +165,11 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	}
 
 	@Override
+	public ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version) {
+		return delegate.module(name, access, version);
+	}
+
+	@Override
 	public ClassFileView build() {
 		return delegate.build();
 	}

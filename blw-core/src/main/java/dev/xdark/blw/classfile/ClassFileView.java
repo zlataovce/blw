@@ -53,4 +53,7 @@ public non-sealed interface ClassFileView extends Accessible, Annotated, Signed 
 
 	@Nullable
 	String sourceDebug();
+
+	@Nullable
+	List<Module> modules();
 }

@@ -3,6 +3,7 @@ package dev.xdark.blw.classfile.generic;
 import dev.xdark.blw.annotation.Annotation;
 import dev.xdark.blw.classfile.ClassFileView;
 import dev.xdark.blw.classfile.Field;
+import dev.xdark.blw.classfile.Module;
 import dev.xdark.blw.classfile.RecordComponent;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.classfile.Method;
@@ -34,6 +35,7 @@ public final class GenericClassFileView implements ClassFileView {
 	private final String sourceFile, sourceDebug;
 	private final List<Annotation> visibleRuntimeAnnotations;
 	private final List<Annotation> invisibleRuntimeAnnotations;
+	private final List<Module> modules;
 
 	public GenericClassFileView(JavaVersion version, ConstantPool pool, int accessFlags, InstanceType type,
 								InstanceType superClass, String signature, List<InstanceType> interfaces,
@@ -41,7 +43,8 @@ public final class GenericClassFileView implements ClassFileView {
 								List<InnerClass> innerClasses, String outerClass, String outerMethodName, String outerMethodDescriptor,
 								List<InstanceType> permittedSubclasses,
 								InstanceType nestHost, List<InstanceType> nestMembers, String sourceFile, String sourceDebug,
-								List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations) {
+								List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations,
+								List<Module> modules) {
 		this.version = version;
 		this.pool = pool;
 		this.accessFlags = accessFlags;
@@ -63,6 +66,7 @@ public final class GenericClassFileView implements ClassFileView {
 		this.sourceDebug = sourceDebug;
 		this.visibleRuntimeAnnotations = visibleRuntimeAnnotations;
 		this.invisibleRuntimeAnnotations = invisibleRuntimeAnnotations;
+		this.modules = modules;
 	}
 
 	@Override
@@ -168,5 +172,10 @@ public final class GenericClassFileView implements ClassFileView {
 	@Override
 	public @Nullable String signature() {
 		return signature;
+	}
+
+	@Override
+	public @Nullable List<Module> modules() {
+		return modules;
 	}
 }

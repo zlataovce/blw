@@ -30,7 +30,7 @@ public sealed interface RecordComponentBuilder extends AnnotatedBuilder permits 
 		@Nullable AnnotationBuilder.Nested<RecordComponentBuilder.Nested<U>> invisibleRuntimeAnnotation(InstanceType type);
 	}
 
-	default RecordComponentBuilder.Root builder() {
+	static RecordComponentBuilder.Root builder() {
 		return new GenericRecordComponentBuilder.Root();
 	}
 }

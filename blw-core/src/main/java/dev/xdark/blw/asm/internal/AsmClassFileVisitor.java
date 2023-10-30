@@ -99,6 +99,12 @@ final class AsmClassFileVisitor extends ClassVisitor {
 	}
 
 	@Override
+	public ModuleVisitor visitModule(String name, int access, String version) {
+		var builder = classBuilder.module(name, access, version);
+		return new AsmModuleVisitor(builder);
+	}
+
+	@Override
 	public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
 		return Util.visitAnnotation(classBuilder, descriptor, visible);
 	}

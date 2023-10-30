@@ -3,6 +3,7 @@ package dev.xdark.blw.classfile.generic;
 import dev.xdark.blw.annotation.AnnotationBuilder;
 import dev.xdark.blw.annotation.generic.GenericAnnotationBuilder;
 import dev.xdark.blw.classfile.*;
+import dev.xdark.blw.classfile.Module;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.internal.BuilderShadow;
@@ -22,6 +23,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 	private final List<Reflectable<Method>> methods = new ArrayList<>();
 	private final List<Reflectable<Field>> fields = new ArrayList<>();
 	private final List<Reflectable<RecordComponent>> recordComponents = new ArrayList<>();
+	private final List<Reflectable<Module>> modules = new ArrayList<>();
 	private String outerClass;
 	private String outerMethodName;
 	private String outerMethodDescriptor;
@@ -211,6 +213,13 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version) {
+		var builder = new GenericModuleBuilder.Nested<>(name, access, version, (ClassBuilder) this);
+		modules.add(builder);
+		return builder;
+	}
+
+	@Override
 	public ClassFileView build() {
 		return new GenericClassFileView(
 				version,
@@ -233,7 +242,8 @@ public final class GenericClassBuilder implements ClassBuilder {
 				sourceFile,
 				sourceDebug,
 				buildList(visibleRuntimeAnnotations),
-				buildList(invisibleRuntimeAnnotation)
+				buildList(invisibleRuntimeAnnotation),
+				buildList(modules)
 		);
 	}
 

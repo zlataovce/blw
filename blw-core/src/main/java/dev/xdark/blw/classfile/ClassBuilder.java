@@ -72,6 +72,8 @@ public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, Signe
 
 	ClassBuilder sourceDebug(@Nullable String sourceDebug);
 
+	ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version);
+
 	static ClassBuilder builder() {
 		return new GenericClassBuilder();
 	}

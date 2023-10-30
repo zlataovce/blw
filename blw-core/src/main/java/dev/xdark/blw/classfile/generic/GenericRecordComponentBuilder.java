@@ -29,21 +29,22 @@ permits GenericRecordComponentBuilder.Root, GenericRecordComponentBuilder.Nested
 	}
 
 	@Override
+	@SuppressWarnings("all")
 	public @Nullable AnnotationBuilder.Nested<? extends AnnotatedBuilder> visibleRuntimeAnnotation(InstanceType type) {
 		var builder = new GenericAnnotationBuilder.Nested<>(type, (Builder) this);
 		visibleRuntimeAnnotations.add(builder);
 
-		//noinspection unchecked
-		return (AnnotationBuilder.Nested<? extends AnnotatedBuilder>) builder;
+		return (AnnotationBuilder.Nested<? extends AnnotatedBuilder>) (Object) builder;
 	}
 
 	@Override
+	@SuppressWarnings("all")
 	public @Nullable AnnotationBuilder.Nested<? extends AnnotatedBuilder> invisibleRuntimeAnnotation(InstanceType type) {
 		var builder = new GenericAnnotationBuilder.Nested<>(type, (Builder) this);
 		invisibleRuntimeAnnotation.add(builder);
 
 		//noinspection unchecked
-		return (AnnotationBuilder.Nested<? extends AnnotatedBuilder>) builder;
+		return (AnnotationBuilder.Nested<? extends AnnotatedBuilder>) (Object) builder;
 	}
 
 	protected final List<Annotation> visibleRuntimeAnnotations() {
@@ -85,11 +86,6 @@ permits GenericRecordComponentBuilder.Root, GenericRecordComponentBuilder.Nested
 		public @Nullable AnnotationBuilder.Nested<RecordComponentBuilder.Root> invisibleRuntimeAnnotation(InstanceType type) {
 			//noinspection unchecked
 			return (AnnotationBuilder.Nested<RecordComponentBuilder.Root>) super.invisibleRuntimeAnnotation(type);
-		}
-
-		@Override
-		public RecordComponentBuilder.Root builder() {
-			return RecordComponentBuilder.Root.super.builder();
 		}
 
 		@Override
