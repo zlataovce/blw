@@ -57,6 +57,8 @@ public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, Signe
 
 	ClassBuilder nestHost(@Nullable InstanceType nestHost);
 
+	ClassBuilder nestMember(@Nullable InstanceType nestMember);
+
 	ClassBuilder sourceFile(@Nullable String sourceFile);
 
 	ClassBuilder sourceDebug(@Nullable String sourceDebug);

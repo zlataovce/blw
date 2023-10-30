@@ -70,6 +70,11 @@ final class AsmClassFileVisitor extends ClassVisitor {
 	}
 
 	@Override
+	public void visitNestMember(String nestMember) {
+		classBuilder.nestMember(Types.instanceTypeFromInternalName(nestMember));
+	}
+
+	@Override
 	public void visitSource(String source, String debug) {
 		classBuilder.sourceFile(source).sourceDebug(debug);
 	}

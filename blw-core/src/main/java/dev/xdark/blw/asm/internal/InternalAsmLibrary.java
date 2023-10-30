@@ -146,6 +146,14 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 					(superClass = classFileView.superClass()) == null ? null : superClass.internalName(),
 					classFileView.interfaces().stream().map(ObjectType::internalName).toArray(String[]::new)
 			);
+
+			InstanceType nestHost = classFileView.nestHost();
+			List<InstanceType> nestMembers = classFileView.nestMembers();
+			if (nestHost != null)
+				writer.visitNestHost(nestHost.internalName());
+			if (nestMembers != null) for (InstanceType nestMember : nestMembers) {
+				writer.visitNestMember(nestMember.internalName());
+			}
 		}
 		StraightforwardSimulation simulation = new StraightforwardSimulation();
 		LabelMappingImpl mapping = new LabelMappingImpl();

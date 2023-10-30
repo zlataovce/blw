@@ -27,6 +27,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 	private final List<Reflectable<Method>> methods = new ArrayList<>();
 	private final List<Reflectable<Field>> fields = new ArrayList<>();
 	private List<InnerClass> innerClasses = List.of();
+	private List<InstanceType> nestMembers = List.of();
 	private InstanceType nestHost;
 	private String sourceFile, sourceDebug;
 	private int accessFlags;
@@ -155,6 +156,17 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder nestMember(@Nullable InstanceType nestMember) {
+		List<InstanceType> nestMembers = this.nestMembers;
+		if (nestMembers.isEmpty()) {
+			nestMembers = new ArrayList<>();
+			this.nestMembers = nestMembers;
+		}
+		nestMembers.add(nestMember);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder sourceFile(@Nullable String sourceFile) {
 		this.sourceFile = sourceFile;
 		return this;
@@ -180,6 +192,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 				buildList(fields),
 				innerClasses,
 				nestHost,
+				nestMembers,
 				sourceFile,
 				sourceDebug,
 				buildList(visibleRuntimeAnnotations),

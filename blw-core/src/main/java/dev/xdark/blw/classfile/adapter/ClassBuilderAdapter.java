@@ -129,6 +129,12 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder nestMember(@Nullable InstanceType nestMember) {
+		delegate.nestMember(nestMember);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder sourceFile(@Nullable String sourceFile) {
 		delegate.sourceFile(sourceFile);
 		return this;
