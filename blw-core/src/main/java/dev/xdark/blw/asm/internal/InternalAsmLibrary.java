@@ -139,6 +139,14 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 					classFileView.interfaces().stream().map(ObjectType::internalName).toArray(String[]::new)
 			);
 
+			List<InnerClass> innerClasses = classFileView.innerClasses();
+			if (innerClasses != null) for (InnerClass innerClass : innerClasses) {
+				writer.visitInnerClass(innerClass.type().internalName(),
+						innerClass.outerType() == null ? null : innerClass.outerType().internalName(),
+						innerClass.innerName(),
+						innerClass.accessFlags());
+			}
+
 			InstanceType nestHost = classFileView.nestHost();
 			List<InstanceType> nestMembers = classFileView.nestMembers();
 			if (nestHost != null)
