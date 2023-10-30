@@ -58,10 +58,11 @@ public abstract sealed class GenericCodeBuilder implements BuilderShadow<Code> p
 		return (CodeBuilder) this;
 	}
 
+	@SuppressWarnings("all")
 	public CodeListBuilder.Nested<? extends CodeBuilder> codeList() {
 		CodeListBuilder.Nested<? extends CodeBuilder> content = this.content;
 		if (content == null) {
-			content = new GenericCodeListBuilder.Nested<>((CodeBuilder & Builder) this);
+			content = new GenericCodeListBuilder.Nested<>((CodeBuilder & Builder) (Object) this);
 			this.content = content;
 		}
 		return content;
