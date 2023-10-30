@@ -3,6 +3,7 @@ package dev.xdark.blw.classfile.generic;
 import dev.xdark.blw.annotation.Annotation;
 import dev.xdark.blw.classfile.ClassFileView;
 import dev.xdark.blw.classfile.Field;
+import dev.xdark.blw.classfile.RecordComponent;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.classfile.Method;
 import dev.xdark.blw.constantpool.ConstantPool;
@@ -22,6 +23,7 @@ public final class GenericClassFileView implements ClassFileView {
 	private final List<InstanceType> interfaces;
 	private final List<Method> methods;
 	private final List<Field> fields;
+	private final List<RecordComponent> recordComponents;
 	private final List<InnerClass> innerClasses;
 	private final String outerClass;
 	private final String outerMethodName;
@@ -35,8 +37,8 @@ public final class GenericClassFileView implements ClassFileView {
 
 	public GenericClassFileView(JavaVersion version, ConstantPool pool, int accessFlags, InstanceType type,
 								InstanceType superClass, String signature, List<InstanceType> interfaces,
-								List<Method> methods, List<Field> fields, List<InnerClass> innerClasses,
-								String outerClass, String outerMethodName, String outerMethodDescriptor,
+								List<Method> methods, List<Field> fields, List<RecordComponent> recordComponents,
+								List<InnerClass> innerClasses, String outerClass, String outerMethodName, String outerMethodDescriptor,
 								List<InstanceType> permittedSubclasses,
 								InstanceType nestHost, List<InstanceType> nestMembers, String sourceFile, String sourceDebug,
 								List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations) {
@@ -49,6 +51,7 @@ public final class GenericClassFileView implements ClassFileView {
 		this.interfaces = interfaces;
 		this.methods = methods;
 		this.fields = fields;
+		this.recordComponents = recordComponents;
 		this.innerClasses = innerClasses;
 		this.outerMethodName = outerMethodName;
 		this.outerMethodDescriptor = outerMethodDescriptor;
@@ -110,6 +113,11 @@ public final class GenericClassFileView implements ClassFileView {
 	@Override
 	public List<Field> fields() {
 		return fields;
+	}
+
+	@Override
+	public List<RecordComponent> recordComponents() {
+		return recordComponents;
 	}
 
 	@Override

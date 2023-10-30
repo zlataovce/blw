@@ -2,12 +2,7 @@ package dev.xdark.blw.classfile.generic;
 
 import dev.xdark.blw.annotation.AnnotationBuilder;
 import dev.xdark.blw.annotation.generic.GenericAnnotationBuilder;
-import dev.xdark.blw.classfile.ClassBuilder;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
-import dev.xdark.blw.classfile.FieldBuilder;
-import dev.xdark.blw.classfile.Method;
-import dev.xdark.blw.classfile.MethodBuilder;
+import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.internal.BuilderShadow;
@@ -26,6 +21,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 	private final List<AnnotationBuilder> invisibleRuntimeAnnotation = new ArrayList<>();
 	private final List<Reflectable<Method>> methods = new ArrayList<>();
 	private final List<Reflectable<Field>> fields = new ArrayList<>();
+	private final List<Reflectable<RecordComponent>> recordComponents = new ArrayList<>();
 	private String outerClass;
 	private String outerMethodName;
 	private String outerMethodDescriptor;
@@ -109,6 +105,13 @@ public final class GenericClassBuilder implements ClassBuilder {
 	public FieldBuilder.Nested<ClassBuilder> field(int accessFlags, String name, ClassType type) {
 		var builder = new GenericFieldBuilder.Nested<>(accessFlags, name, type, (ClassBuilder) this);
 		fields.add(builder);
+		return builder;
+	}
+
+	@Override
+	public RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature) {
+		var builder = new GenericRecordComponentBuilder.Nested<>(name, type, signature, (ClassBuilder) this);
+		recordComponents.add(builder);
 		return builder;
 	}
 
@@ -219,6 +222,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 				interfaces,
 				buildList(methods),
 				buildList(fields),
+				buildList(recordComponents),
 				innerClasses,
 				outerClass,
 				outerMethodName,

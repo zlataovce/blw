@@ -26,6 +26,8 @@ public non-sealed interface ClassFileView extends Accessible, Annotated, Signed 
 
 	List<Field> fields();
 
+	List<RecordComponent> recordComponents();
+
 	List<InnerClass> innerClasses();
 
 	@Nullable

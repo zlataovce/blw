@@ -1,13 +1,8 @@
 package dev.xdark.blw.classfile.adapter;
 
 import dev.xdark.blw.annotation.AnnotationBuilder;
-import dev.xdark.blw.classfile.ClassBuilder;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
-import dev.xdark.blw.classfile.FieldBuilder;
+import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.attribute.InnerClass;
-import dev.xdark.blw.classfile.Method;
-import dev.xdark.blw.classfile.MethodBuilder;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.type.ClassType;
 import dev.xdark.blw.type.InstanceType;
@@ -84,6 +79,11 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	@Override
 	public FieldBuilder.@Nullable Nested<ClassBuilder> field(int accessFlags, String name, ClassType type) {
 		return delegate.field(accessFlags, name, type);
+	}
+
+	@Override
+	public @Nullable RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature) {
+		return delegate.recordComponent(name, type, signature);
 	}
 
 	@Override

@@ -43,6 +43,9 @@ public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, Signe
 	@Nullable
 	FieldBuilder.Nested<ClassBuilder> field(int accessFlags, String name, ClassType type);
 
+	@Nullable
+	RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature);
+
 	ClassBuilder method(MethodBuilder.Root method);
 
 	ClassBuilder field(FieldBuilder.Root field);

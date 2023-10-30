@@ -2,15 +2,10 @@ package dev.xdark.blw.asm.internal;
 
 import dev.xdark.blw.classfile.ClassBuilder;
 import dev.xdark.blw.classfile.attribute.generic.GenericInnerClass;
-import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.type.TypeReader;
 import dev.xdark.blw.type.Types;
 import dev.xdark.blw.version.JavaVersion;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -92,6 +87,15 @@ final class AsmClassFileVisitor extends ClassVisitor {
 	@Override
 	public void visitPermittedSubclass(String permittedSubclass) {
 		classBuilder.permittedSubclass(Types.instanceTypeFromInternalName(permittedSubclass));
+	}
+
+	@Override
+	public RecordComponentVisitor visitRecordComponent(String name, String descriptor, String signature) {
+		var type = Types.isPrimitive(descriptor) ?
+				Types.primitiveFromDesc(descriptor) :
+				Types.instanceTypeFromDescriptor(descriptor);
+		var builder = classBuilder.recordComponent(name, type, signature);
+		return new AsmRecordComponentVisitor(builder);
 	}
 
 	@Override

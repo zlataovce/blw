@@ -111,6 +111,22 @@ public final class Types {
 		return arrayTypeFromDescriptor(internalName(externalName));
 	}
 
+	public static PrimitiveType primitiveFromDesc(String descriptor) {
+		char c = descriptor.charAt(0);
+		return switch (c) {
+			case 'V' -> VOID;
+			case 'J' -> LONG;
+			case 'D' -> DOUBLE;
+			case 'I' -> INT;
+			case 'F' -> FLOAT;
+			case 'C' -> CHAR;
+			case 'S' -> SHORT;
+			case 'B' -> BYTE;
+			case 'Z' -> BOOLEAN;
+			default -> throw new IllegalStateException("Unexpected value: " + c);
+		};
+	}
+
 	public static PrimitiveType primitiveOfKind(int kind) {
 		return switch (kind) {
 			case T_BOOLEAN -> BOOLEAN;
@@ -123,6 +139,13 @@ public final class Types {
 			case T_LONG -> LONG;
 			case T_VOID -> VOID;
 			default -> throw new IllegalStateException("Unexpected value: " + kind);
+		};
+	}
+
+	public static boolean isPrimitive(String type) {
+		return type.length() == 1 && switch (type.charAt(0)) {
+			case 'V', 'J', 'D', 'I', 'F', 'C', 'S', 'B', 'Z' -> true;
+			default -> false;
 		};
 	}
 

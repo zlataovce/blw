@@ -16,10 +16,8 @@ import dev.xdark.blw.annotation.ElementShort;
 import dev.xdark.blw.annotation.ElementString;
 import dev.xdark.blw.annotation.ElementType;
 import dev.xdark.blw.asm.ClassWriterProvider;
-import dev.xdark.blw.classfile.ClassBuilder;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
-import dev.xdark.blw.classfile.Method;
+import dev.xdark.blw.classfile.*;
+import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.code.Code;
 import dev.xdark.blw.code.Label;
 import dev.xdark.blw.code.attribute.Local;
@@ -57,13 +55,7 @@ import dev.xdark.blw.type.ObjectType;
 import dev.xdark.blw.type.Types;
 import dev.xdark.blw.type.InvokeDynamic;
 import dev.xdark.blw.type.MethodHandle;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -164,6 +156,14 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			List<InstanceType> permittedSubclasses = classFileView.permittedSubclasses();
 			if (permittedSubclasses != null) for (InstanceType permittedSubclass : permittedSubclasses) {
 				writer.visitPermittedSubclass(permittedSubclass.internalName());
+			}
+
+			List<RecordComponent> recordComponents = classFileView.recordComponents();
+			if (recordComponents != null) for (RecordComponent recordComponent : recordComponents) {
+				RecordComponentVisitor rcv = writer.visitRecordComponent(recordComponent.name(), recordComponent.type().descriptor(), recordComponent.signature());
+				AnnotationDumper dumper = rcv::visitAnnotation;
+				dumpAnnotationList(dumper, recordComponent.visibleRuntimeAnnotations(), true);
+				dumpAnnotationList(dumper, recordComponent.invisibleRuntimeAnnotations(), false);
 			}
 		}
 		StraightforwardSimulation simulation = new StraightforwardSimulation();
