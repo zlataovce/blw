@@ -59,6 +59,8 @@ public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, Signe
 
 	ClassBuilder outerMethod(String owner, String name, String descriptor);
 
+	ClassBuilder permittedSubclass(InstanceType permittedSubclass);
+
 	ClassBuilder nestHost(@Nullable InstanceType nestHost);
 
 	ClassBuilder nestMember(@Nullable InstanceType nestMember);

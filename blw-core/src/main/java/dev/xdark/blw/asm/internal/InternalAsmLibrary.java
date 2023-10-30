@@ -160,6 +160,11 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			String outerMethodDescriptor = classFileView.outerMethodDescriptor();
 			if (outerClass != null)
 				writer.visitOuterClass(outerClass, outerMethodName, outerMethodDescriptor);
+
+			List<InstanceType> permittedSubclasses = classFileView.permittedSubclasses();
+			if (permittedSubclasses != null) for (InstanceType permittedSubclass : permittedSubclasses) {
+				writer.visitPermittedSubclass(permittedSubclass.internalName());
+			}
 		}
 		StraightforwardSimulation simulation = new StraightforwardSimulation();
 		LabelMappingImpl mapping = new LabelMappingImpl();

@@ -2,6 +2,7 @@ package dev.xdark.blw.asm.internal;
 
 import dev.xdark.blw.classfile.ClassBuilder;
 import dev.xdark.blw.classfile.attribute.generic.GenericInnerClass;
+import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.type.TypeReader;
 import dev.xdark.blw.type.Types;
 import dev.xdark.blw.version.JavaVersion;
@@ -86,6 +87,11 @@ final class AsmClassFileVisitor extends ClassVisitor {
 		} else {
 			classBuilder.outerMethod(owner, name, descriptor);
 		}
+	}
+
+	@Override
+	public void visitPermittedSubclass(String permittedSubclass) {
+		classBuilder.permittedSubclass(Types.instanceTypeFromInternalName(permittedSubclass));
 	}
 
 	@Override

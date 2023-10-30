@@ -30,6 +30,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 	private String outerMethodName;
 	private String outerMethodDescriptor;
 	private List<InnerClass> innerClasses = List.of();
+	private List<InstanceType> permittedSubclasses = List.of();
 	private List<InstanceType> nestMembers = List.of();
 	private InstanceType nestHost;
 	private String sourceFile, sourceDebug;
@@ -167,6 +168,17 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder permittedSubclass(InstanceType permittedSubclass) {
+		List<InstanceType> permittedSubclasses = this.permittedSubclasses;
+		if (permittedSubclasses.isEmpty()) {
+			permittedSubclasses = new ArrayList<>();
+			this.permittedSubclasses = permittedSubclasses;
+		}
+		permittedSubclasses.add(permittedSubclass);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
 		this.nestHost = nestHost;
 		return this;
@@ -211,6 +223,7 @@ public final class GenericClassBuilder implements ClassBuilder {
 				outerClass,
 				outerMethodName,
 				outerMethodDescriptor,
+				permittedSubclasses,
 				nestHost,
 				nestMembers,
 				sourceFile,

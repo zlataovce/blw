@@ -23,9 +23,10 @@ public final class GenericClassFileView implements ClassFileView {
 	private final List<Method> methods;
 	private final List<Field> fields;
 	private final List<InnerClass> innerClasses;
-	private final String outerClass ;
+	private final String outerClass;
 	private final String outerMethodName;
-	private final String outerMethodDescriptor ;
+	private final String outerMethodDescriptor;
+	private final List<InstanceType> permittedSubclasses;
 	private final InstanceType nestHost;
 	private final List<InstanceType> nestMembers;
 	private final String sourceFile, sourceDebug;
@@ -36,6 +37,7 @@ public final class GenericClassFileView implements ClassFileView {
 								InstanceType superClass, String signature, List<InstanceType> interfaces,
 								List<Method> methods, List<Field> fields, List<InnerClass> innerClasses,
 								String outerClass, String outerMethodName, String outerMethodDescriptor,
+								List<InstanceType> permittedSubclasses,
 								InstanceType nestHost, List<InstanceType> nestMembers, String sourceFile, String sourceDebug,
 								List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations) {
 		this.version = version;
@@ -51,6 +53,7 @@ public final class GenericClassFileView implements ClassFileView {
 		this.outerMethodName = outerMethodName;
 		this.outerMethodDescriptor = outerMethodDescriptor;
 		this.outerClass = outerClass;
+		this.permittedSubclasses = permittedSubclasses;
 		this.nestHost = nestHost;
 		this.nestMembers = nestMembers;
 		this.sourceFile = sourceFile;
@@ -127,6 +130,11 @@ public final class GenericClassFileView implements ClassFileView {
 	@Override
 	public @Nullable String outerMethodDescriptor() {
 		return outerMethodDescriptor;
+	}
+
+	@Override
+	public @Nullable List<InstanceType> permittedSubclasses() {
+		return permittedSubclasses;
 	}
 
 	@Override

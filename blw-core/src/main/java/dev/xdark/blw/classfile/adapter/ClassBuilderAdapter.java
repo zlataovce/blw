@@ -135,6 +135,12 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder permittedSubclass(InstanceType permittedSubclass) {
+		delegate.permittedSubclass(permittedSubclass);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
 		delegate.nestHost(nestHost);
 		return this;
