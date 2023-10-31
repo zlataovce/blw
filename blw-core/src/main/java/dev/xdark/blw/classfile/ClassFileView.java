@@ -26,14 +26,34 @@ public non-sealed interface ClassFileView extends Accessible, Annotated, Signed 
 
 	List<Field> fields();
 
+	List<RecordComponent> recordComponents();
+
 	List<InnerClass> innerClasses();
 
 	@Nullable
+	String outerClass();
+
+	@Nullable
+	String outerMethodName();
+
+	@Nullable
+	String outerMethodDescriptor();
+
+	@Nullable
+	List<InstanceType> permittedSubclasses();
+
+	@Nullable
 	InstanceType nestHost();
+
+	@Nullable
+	List<InstanceType> nestMembers();
 
 	@Nullable
 	String sourceFile();
 
 	@Nullable
 	String sourceDebug();
+
+	@Nullable
+	List<Module> modules();
 }

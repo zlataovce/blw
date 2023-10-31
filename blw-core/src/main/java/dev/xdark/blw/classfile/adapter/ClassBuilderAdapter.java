@@ -1,13 +1,8 @@
 package dev.xdark.blw.classfile.adapter;
 
 import dev.xdark.blw.annotation.AnnotationBuilder;
-import dev.xdark.blw.classfile.ClassBuilder;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
-import dev.xdark.blw.classfile.FieldBuilder;
+import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.attribute.InnerClass;
-import dev.xdark.blw.classfile.Method;
-import dev.xdark.blw.classfile.MethodBuilder;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.type.ClassType;
 import dev.xdark.blw.type.InstanceType;
@@ -87,6 +82,11 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	}
 
 	@Override
+	public @Nullable RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature) {
+		return delegate.recordComponent(name, type, signature);
+	}
+
+	@Override
 	public ClassBuilder method(MethodBuilder.Root method) {
 		delegate.method(method);
 		return this;
@@ -123,8 +123,32 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder outerClass(String owner) {
+		delegate.outerClass(owner);
+		return this;
+	}
+
+	@Override
+	public ClassBuilder outerMethod(String owner, String name, String descriptor) {
+		delegate.outerMethod(owner, name, descriptor);
+		return this;
+	}
+
+	@Override
+	public ClassBuilder permittedSubclass(InstanceType permittedSubclass) {
+		delegate.permittedSubclass(permittedSubclass);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
 		delegate.nestHost(nestHost);
+		return this;
+	}
+
+	@Override
+	public ClassBuilder nestMember(@Nullable InstanceType nestMember) {
+		delegate.nestMember(nestMember);
 		return this;
 	}
 
@@ -138,6 +162,11 @@ public abstract class ClassBuilderAdapter implements ClassBuilder {
 	public ClassBuilder sourceDebug(@Nullable String sourceDebug) {
 		delegate.sourceDebug(sourceDebug);
 		return this;
+	}
+
+	@Override
+	public ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version) {
+		return delegate.module(name, access, version);
 	}
 
 	@Override

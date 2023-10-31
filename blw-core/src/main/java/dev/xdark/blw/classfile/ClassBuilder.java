@@ -43,6 +43,9 @@ public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, Signe
 	@Nullable
 	FieldBuilder.Nested<ClassBuilder> field(int accessFlags, String name, ClassType type);
 
+	@Nullable
+	RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature);
+
 	ClassBuilder method(MethodBuilder.Root method);
 
 	ClassBuilder field(FieldBuilder.Root field);
@@ -55,11 +58,21 @@ public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, Signe
 
 	ClassBuilder innerClass(InnerClass innerClass);
 
+	ClassBuilder outerClass(String owner);
+
+	ClassBuilder outerMethod(String owner, String name, String descriptor);
+
+	ClassBuilder permittedSubclass(InstanceType permittedSubclass);
+
 	ClassBuilder nestHost(@Nullable InstanceType nestHost);
+
+	ClassBuilder nestMember(@Nullable InstanceType nestMember);
 
 	ClassBuilder sourceFile(@Nullable String sourceFile);
 
 	ClassBuilder sourceDebug(@Nullable String sourceDebug);
+
+	ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version);
 
 	static ClassBuilder builder() {
 		return new GenericClassBuilder();

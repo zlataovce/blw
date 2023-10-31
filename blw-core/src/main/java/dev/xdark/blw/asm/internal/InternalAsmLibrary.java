@@ -16,10 +16,9 @@ import dev.xdark.blw.annotation.ElementShort;
 import dev.xdark.blw.annotation.ElementString;
 import dev.xdark.blw.annotation.ElementType;
 import dev.xdark.blw.asm.ClassWriterProvider;
-import dev.xdark.blw.classfile.ClassBuilder;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
-import dev.xdark.blw.classfile.Method;
+import dev.xdark.blw.classfile.*;
+import dev.xdark.blw.classfile.Module;
+import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.code.Code;
 import dev.xdark.blw.code.Label;
 import dev.xdark.blw.code.attribute.Local;
@@ -57,23 +56,14 @@ import dev.xdark.blw.type.ObjectType;
 import dev.xdark.blw.type.Types;
 import dev.xdark.blw.type.InvokeDynamic;
 import dev.xdark.blw.type.MethodHandle;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class InternalAsmLibrary implements BytecodeLibrary {
 
@@ -146,6 +136,60 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 					(superClass = classFileView.superClass()) == null ? null : superClass.internalName(),
 					classFileView.interfaces().stream().map(ObjectType::internalName).toArray(String[]::new)
 			);
+
+			List<InnerClass> innerClasses = classFileView.innerClasses();
+			 for (InnerClass innerClass : ensureNonNull(innerClasses)) {
+				writer.visitInnerClass(innerClass.type().internalName(),
+						innerClass.outerType() == null ? null : innerClass.outerType().internalName(),
+						innerClass.innerName(),
+						innerClass.accessFlags());
+			}
+
+			InstanceType nestHost = classFileView.nestHost();
+			List<InstanceType> nestMembers = classFileView.nestMembers();
+			if (nestHost != null)
+				writer.visitNestHost(nestHost.internalName());
+			for (InstanceType nestMember : ensureNonNull(nestMembers))
+				writer.visitNestMember(nestMember.internalName());
+
+			String outerClass = classFileView.outerClass();
+			String outerMethodName = classFileView.outerMethodName();
+			String outerMethodDescriptor = classFileView.outerMethodDescriptor();
+			if (outerClass != null)
+				writer.visitOuterClass(outerClass, outerMethodName, outerMethodDescriptor);
+
+			List<InstanceType> permittedSubclasses = classFileView.permittedSubclasses();
+			for (InstanceType permittedSubclass : ensureNonNull(permittedSubclasses))
+				writer.visitPermittedSubclass(permittedSubclass.internalName());
+
+			List<RecordComponent> recordComponents = classFileView.recordComponents();
+			 for (RecordComponent recordComponent : ensureNonNull(recordComponents)) {
+				RecordComponentVisitor rcv = writer.visitRecordComponent(recordComponent.name(), recordComponent.type().descriptor(), recordComponent.signature());
+				AnnotationDumper dumper = rcv::visitAnnotation;
+				dumpAnnotationList(dumper, recordComponent.visibleRuntimeAnnotations(), true);
+				dumpAnnotationList(dumper, recordComponent.invisibleRuntimeAnnotations(), false);
+			}
+
+			AnnotationDumper writerDumper = writer::visitAnnotation;
+			dumpAnnotationList(writerDumper, classFileView.visibleRuntimeAnnotations(), true);
+			dumpAnnotationList(writerDumper, classFileView.invisibleRuntimeAnnotations(), false);
+
+			List<Module> modules = classFileView.modules();
+			if (modules != null) for (Module module : modules) {
+				ModuleVisitor mv = writer.visitModule(module.name(), module.accessFlags(), module.version());
+				String mainClass = module.mainClass();
+				if (mainClass != null) mv.visitMainClass(mainClass);
+				for (String packageName : ensureNonNull(module.packages()))
+					mv.visitPackage(packageName);
+				for (ModuleRequire require : ensureNonNull(module.requires()))
+					mv.visitRequire(require.module(), require.accessFlags(), require.version());
+				for (ModuleOpen open : ensureNonNull(module.opens()))
+					mv.visitOpen(open.packageName(), open.accessFlags(), open.modules().toArray(String[]::new));
+				for (ModuleProvide provide : ensureNonNull(module.provides()))
+					mv.visitProvide(provide.service(), provide.providers().toArray(String[]::new));
+				for (String use : ensureNonNull(module.uses()))
+					mv.visitUse(use);
+			}
 		}
 		StraightforwardSimulation simulation = new StraightforwardSimulation();
 		LabelMappingImpl mapping = new LabelMappingImpl();
@@ -201,11 +245,6 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			dumpAnnotationList(dumper, field.invisibleRuntimeAnnotations(), false);
 			fv.visitEnd();
 		}
-		{
-			AnnotationDumper writerDumper = writer::visitAnnotation;
-			dumpAnnotationList(writerDumper, classFileView.visibleRuntimeAnnotations(), true);
-			dumpAnnotationList(writerDumper, classFileView.invisibleRuntimeAnnotations(), false);
-		}
 		writer.visitEnd();
 		os.write(writer.toByteArray());
 	}
@@ -258,6 +297,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 	}
 
 	// Copy from ClassReader
+	@SuppressWarnings("deprecation")
 	private static String readUtf(ClassReader cr, final int utfOffset, final int utfLength, final char[] charBuffer) {
 		int currentOffset = utfOffset;
 		int endOffset = currentOffset + utfLength;
@@ -304,8 +344,12 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 		return new InvokeDynamic(name, Types.methodType(descriptor), methodHandle, args);
 	}
 
-	private interface AnnotationDumper {
+	private static <T> Collection<T> ensureNonNull(Collection<T> collection) {
+		if (collection == null) return Collections.emptyList();
+		return collection;
+	}
 
+	private interface AnnotationDumper {
 		AnnotationVisitor visitAnnotation(String descriptor, boolean visible);
 	}
 

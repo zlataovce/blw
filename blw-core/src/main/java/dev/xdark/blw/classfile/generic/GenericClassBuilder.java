@@ -2,12 +2,8 @@ package dev.xdark.blw.classfile.generic;
 
 import dev.xdark.blw.annotation.AnnotationBuilder;
 import dev.xdark.blw.annotation.generic.GenericAnnotationBuilder;
-import dev.xdark.blw.classfile.ClassBuilder;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
-import dev.xdark.blw.classfile.FieldBuilder;
-import dev.xdark.blw.classfile.Method;
-import dev.xdark.blw.classfile.MethodBuilder;
+import dev.xdark.blw.classfile.*;
+import dev.xdark.blw.classfile.Module;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.internal.BuilderShadow;
@@ -26,7 +22,14 @@ public final class GenericClassBuilder implements ClassBuilder {
 	private final List<AnnotationBuilder> invisibleRuntimeAnnotation = new ArrayList<>();
 	private final List<Reflectable<Method>> methods = new ArrayList<>();
 	private final List<Reflectable<Field>> fields = new ArrayList<>();
+	private final List<Reflectable<RecordComponent>> recordComponents = new ArrayList<>();
+	private final List<Reflectable<Module>> modules = new ArrayList<>();
+	private String outerClass;
+	private String outerMethodName;
+	private String outerMethodDescriptor;
 	private List<InnerClass> innerClasses = List.of();
+	private List<InstanceType> permittedSubclasses = List.of();
+	private List<InstanceType> nestMembers = List.of();
 	private InstanceType nestHost;
 	private String sourceFile, sourceDebug;
 	private int accessFlags;
@@ -108,6 +111,13 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature) {
+		var builder = new GenericRecordComponentBuilder.Nested<>(name, type, signature, (ClassBuilder) this);
+		recordComponents.add(builder);
+		return builder;
+	}
+
+	@Override
 	public ClassBuilder method(MethodBuilder.Root method) {
 		methods.add(method);
 		return this;
@@ -149,8 +159,44 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public ClassBuilder outerClass(String owner) {
+		outerClass = owner;
+		return this;
+	}
+
+	@Override
+	public ClassBuilder outerMethod(String owner, String name, String descriptor) {
+		outerClass = owner;
+		outerMethodName = name;
+		outerMethodDescriptor = descriptor;
+		return this;
+	}
+
+	@Override
+	public ClassBuilder permittedSubclass(InstanceType permittedSubclass) {
+		List<InstanceType> permittedSubclasses = this.permittedSubclasses;
+		if (permittedSubclasses.isEmpty()) {
+			permittedSubclasses = new ArrayList<>();
+			this.permittedSubclasses = permittedSubclasses;
+		}
+		permittedSubclasses.add(permittedSubclass);
+		return this;
+	}
+
+	@Override
 	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
 		this.nestHost = nestHost;
+		return this;
+	}
+
+	@Override
+	public ClassBuilder nestMember(@Nullable InstanceType nestMember) {
+		List<InstanceType> nestMembers = this.nestMembers;
+		if (nestMembers.isEmpty()) {
+			nestMembers = new ArrayList<>();
+			this.nestMembers = nestMembers;
+		}
+		nestMembers.add(nestMember);
 		return this;
 	}
 
@@ -167,6 +213,13 @@ public final class GenericClassBuilder implements ClassBuilder {
 	}
 
 	@Override
+	public ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version) {
+		var builder = new GenericModuleBuilder.Nested<>(name, access, version, (ClassBuilder) this);
+		modules.add(builder);
+		return builder;
+	}
+
+	@Override
 	public ClassFileView build() {
 		return new GenericClassFileView(
 				version,
@@ -178,12 +231,19 @@ public final class GenericClassBuilder implements ClassBuilder {
 				interfaces,
 				buildList(methods),
 				buildList(fields),
+				buildList(recordComponents),
 				innerClasses,
+				outerClass,
+				outerMethodName,
+				outerMethodDescriptor,
+				permittedSubclasses,
 				nestHost,
+				nestMembers,
 				sourceFile,
 				sourceDebug,
 				buildList(visibleRuntimeAnnotations),
-				buildList(invisibleRuntimeAnnotation)
+				buildList(invisibleRuntimeAnnotation),
+				buildList(modules)
 		);
 	}
 
