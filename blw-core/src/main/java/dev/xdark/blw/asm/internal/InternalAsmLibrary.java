@@ -1,61 +1,20 @@
 package dev.xdark.blw.asm.internal;
 
 import dev.xdark.blw.BytecodeLibrary;
-import dev.xdark.blw.annotation.Annotation;
-import dev.xdark.blw.annotation.Element;
-import dev.xdark.blw.annotation.ElementArray;
-import dev.xdark.blw.annotation.ElementBoolean;
-import dev.xdark.blw.annotation.ElementByte;
-import dev.xdark.blw.annotation.ElementChar;
-import dev.xdark.blw.annotation.ElementDouble;
-import dev.xdark.blw.annotation.ElementEnum;
-import dev.xdark.blw.annotation.ElementFloat;
-import dev.xdark.blw.annotation.ElementInt;
-import dev.xdark.blw.annotation.ElementLong;
-import dev.xdark.blw.annotation.ElementShort;
-import dev.xdark.blw.annotation.ElementString;
-import dev.xdark.blw.annotation.ElementType;
+import dev.xdark.blw.annotation.*;
 import dev.xdark.blw.asm.ClassWriterProvider;
-import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.Module;
+import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.code.Code;
 import dev.xdark.blw.code.Label;
-import dev.xdark.blw.code.attribute.Local;
 import dev.xdark.blw.code.TryCatchBlock;
-import dev.xdark.blw.constant.Constant;
-import dev.xdark.blw.constant.OfDouble;
-import dev.xdark.blw.constant.OfDynamic;
-import dev.xdark.blw.constant.OfFloat;
-import dev.xdark.blw.constant.OfInt;
-import dev.xdark.blw.constant.OfLong;
-import dev.xdark.blw.constant.OfString;
-import dev.xdark.blw.constantpool.Entry;
-import dev.xdark.blw.constantpool.EntryClass;
-import dev.xdark.blw.constantpool.EntryDouble;
-import dev.xdark.blw.constantpool.EntryDynamic;
-import dev.xdark.blw.constantpool.EntryFieldRef;
-import dev.xdark.blw.constantpool.EntryFloat;
-import dev.xdark.blw.constantpool.EntryInteger;
-import dev.xdark.blw.constantpool.EntryInterfaceMethodRef;
-import dev.xdark.blw.constantpool.EntryInvokeDynamic;
-import dev.xdark.blw.constantpool.EntryLong;
-import dev.xdark.blw.constantpool.EntryMethodHandle;
-import dev.xdark.blw.constantpool.EntryMethodRef;
-import dev.xdark.blw.constantpool.EntryMethodType;
-import dev.xdark.blw.constantpool.EntryModule;
-import dev.xdark.blw.constantpool.EntryNameAndType;
-import dev.xdark.blw.constantpool.EntryPackage;
-import dev.xdark.blw.constantpool.EntryString;
-import dev.xdark.blw.constantpool.EntryUtf8;
-import dev.xdark.blw.constantpool.ListConstantPool;
-import dev.xdark.blw.constantpool.Tag;
+import dev.xdark.blw.code.attribute.Local;
+import dev.xdark.blw.constant.*;
+import dev.xdark.blw.constantpool.*;
 import dev.xdark.blw.simulation.StraightforwardSimulation;
-import dev.xdark.blw.type.InstanceType;
-import dev.xdark.blw.type.ObjectType;
-import dev.xdark.blw.type.Types;
-import dev.xdark.blw.type.InvokeDynamic;
-import dev.xdark.blw.type.MethodHandle;
+import dev.xdark.blw.type.*;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
@@ -66,7 +25,6 @@ import java.lang.invoke.VarHandle;
 import java.util.*;
 
 public final class InternalAsmLibrary implements BytecodeLibrary {
-
 	private static final VarHandle BOOTSTRAP_METHODS;
 	private final ClassWriterProvider classWriterProvider;
 
@@ -74,7 +32,9 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 		this.classWriterProvider = classWriterProvider;
 	}
 
+
 	@Override
+	@SuppressWarnings("rawtypes")
 	public void read(InputStream in, ClassBuilder classBuilder) throws IOException {
 		ClassReader cr = new ClassReader(in);
 		int itemCount = cr.getItemCount();
@@ -97,8 +57,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 				}
 				case Tag.Class -> new EntryClass(cr.readUnsignedShort(offset));
 				case Tag.String -> new EntryString(cr.readUnsignedShort(offset));
-				case Tag.Fieldref ->
-						new EntryFieldRef(cr.readUnsignedShort(offset), cr.readUnsignedShort(offset + 2));
+				case Tag.Fieldref -> new EntryFieldRef(cr.readUnsignedShort(offset), cr.readUnsignedShort(offset + 2));
 				case Tag.Methodref ->
 						new EntryMethodRef(cr.readUnsignedShort(offset), cr.readUnsignedShort(offset + 2));
 				case Tag.InterfaceMethodref ->
@@ -119,7 +78,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			};
 			entries.add(entry);
 		}
-		classBuilder.constantPool(new ListConstantPool(entries));
+		classBuilder.setConstantPool(new ListConstantPool(entries));
 		cr.accept(new AsmClassFileVisitor(classBuilder), ClassReader.SKIP_FRAMES);
 	}
 
@@ -138,7 +97,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			);
 
 			List<InnerClass> innerClasses = classFileView.innerClasses();
-			 for (InnerClass innerClass : ensureNonNull(innerClasses)) {
+			for (InnerClass innerClass : ensureNonNull(innerClasses)) {
 				writer.visitInnerClass(innerClass.type().internalName(),
 						innerClass.outerType() == null ? null : innerClass.outerType().internalName(),
 						innerClass.innerName(),
@@ -163,7 +122,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 				writer.visitPermittedSubclass(permittedSubclass.internalName());
 
 			List<RecordComponent> recordComponents = classFileView.recordComponents();
-			 for (RecordComponent recordComponent : ensureNonNull(recordComponents)) {
+			for (RecordComponent recordComponent : ensureNonNull(recordComponents)) {
 				RecordComponentVisitor rcv = writer.visitRecordComponent(recordComponent.name(), recordComponent.type().descriptor(), recordComponent.signature());
 				AnnotationDumper dumper = rcv::visitAnnotation;
 				dumpAnnotationList(dumper, recordComponent.visibleRuntimeAnnotations(), true);

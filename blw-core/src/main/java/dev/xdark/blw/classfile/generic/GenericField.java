@@ -8,11 +8,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class GenericField extends GenericMember implements Field {
-	private final ClassType type;
-	private final Constant defaultValue;
+public class GenericField extends GenericMember<ClassType> implements Field {
+	protected final ClassType type;
+	protected final Constant defaultValue;
 
-	public GenericField(int accessFlags, String name, String signature, List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations, ClassType type, Constant defaultValue) {
+	public GenericField(int accessFlags, String name, String signature,
+						List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations,
+						ClassType type, Constant defaultValue) {
 		super(accessFlags, name, signature, visibleRuntimeAnnotations, invisibleRuntimeAnnotations);
 		this.type = type;
 		this.defaultValue = defaultValue;

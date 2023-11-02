@@ -39,11 +39,11 @@ import org.objectweb.asm.Opcodes;
 import static dev.xdark.blw.code.ExtensionOpcodes.*;
 import static dev.xdark.blw.code.JavaOpcodes.*;
 
-final class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
-	private final LabelMapping labelMapping;
-	private final MethodVisitor mv;
+public class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
+	protected final LabelMapping labelMapping;
+	protected final MethodVisitor mv;
 
-	AsmDumpEngine(LabelMapping labelMapping, MethodVisitor mv) {
+	public AsmDumpEngine(LabelMapping labelMapping, MethodVisitor mv) {
 		this.labelMapping = labelMapping;
 		this.mv = mv;
 	}

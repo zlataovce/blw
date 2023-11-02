@@ -11,10 +11,10 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-final class AsmClassFileVisitor extends ClassVisitor {
-	private final ClassBuilder classBuilder;
+public class AsmClassFileVisitor extends ClassVisitor {
+	protected final ClassBuilder<?, ?> classBuilder;
 
-	AsmClassFileVisitor(ClassBuilder classBuilder) {
+	public AsmClassFileVisitor(ClassBuilder<?, ?> classBuilder) {
 		super(Opcodes.ASM9);
 		this.classBuilder = classBuilder;
 	}
@@ -22,17 +22,17 @@ final class AsmClassFileVisitor extends ClassVisitor {
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		classBuilder
-				.version(JavaVersion.classVersion(version & 0xFFFF, (version >>> 16) & 0xFFFF))
+				.setVersion(JavaVersion.classVersion(version & 0xFFFF, (version >>> 16) & 0xFFFF))
 				.accessFlags(access)
 				.type(Types.instanceTypeFromInternalName(name))
 				.signature(signature)
-				.superClass(superName == null ? null : Types.instanceTypeFromInternalName(superName))
-				.interfaces(Arrays.stream(interfaces).map(Types::instanceTypeFromInternalName).toList());
+				.setSuperClass(superName == null ? null : Types.instanceTypeFromInternalName(superName))
+				.setInterfaces(Arrays.stream(interfaces).map(Types::instanceTypeFromInternalName).toList());
 	}
 
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-		var method = classBuilder.method(access, name, Types.methodType(descriptor));
+		var method = classBuilder.putMethod(access, name, Types.methodType(descriptor)).child();
 		if (method == null) {
 			return null;
 		}
@@ -42,7 +42,7 @@ final class AsmClassFileVisitor extends ClassVisitor {
 
 	@Override
 	public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-		var field = classBuilder.field(access, name, new TypeReader(descriptor).requireClassType());
+		var field = classBuilder.putField(access, name, new TypeReader(descriptor).requireClassType()).child();
 		if (field == null) {
 			return null;
 		}
@@ -52,7 +52,7 @@ final class AsmClassFileVisitor extends ClassVisitor {
 
 	@Override
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
-		classBuilder.innerClass(new GenericInnerClass(
+		classBuilder.addInnerClass(new GenericInnerClass(
 				access,
 				Types.instanceTypeFromInternalName(name),
 				outerName == null ? null : Types.instanceTypeFromInternalName(outerName),
@@ -62,31 +62,31 @@ final class AsmClassFileVisitor extends ClassVisitor {
 
 	@Override
 	public void visitNestHost(String nestHost) {
-		classBuilder.nestHost(Types.instanceTypeFromInternalName(nestHost));
+		classBuilder.setNestHost(Types.instanceTypeFromInternalName(nestHost));
 	}
 
 	@Override
 	public void visitNestMember(String nestMember) {
-		classBuilder.nestMember(Types.instanceTypeFromInternalName(nestMember));
+		classBuilder.addNestMember(Types.instanceTypeFromInternalName(nestMember));
 	}
 
 	@Override
 	public void visitSource(String source, String debug) {
-		classBuilder.sourceFile(source).sourceDebug(debug);
+		classBuilder.setSourceFile(source).setSourceDebug(debug);
 	}
 
 	@Override
 	public void visitOuterClass(String owner, String name, String descriptor) {
 		if (name == null) {
-			classBuilder.outerClass(owner);
+			classBuilder.setOuterClass(owner);
 		} else {
-			classBuilder.outerMethod(owner, name, descriptor);
+			classBuilder.setOuterMethod(owner, name, descriptor);
 		}
 	}
 
 	@Override
 	public void visitPermittedSubclass(String permittedSubclass) {
-		classBuilder.permittedSubclass(Types.instanceTypeFromInternalName(permittedSubclass));
+		classBuilder.addPermittedSubclass(Types.instanceTypeFromInternalName(permittedSubclass));
 	}
 
 	@Override
@@ -94,18 +94,19 @@ final class AsmClassFileVisitor extends ClassVisitor {
 		var type = Types.isPrimitive(descriptor) ?
 				Types.primitiveFromDesc(descriptor) :
 				Types.instanceTypeFromDescriptor(descriptor);
-		var builder = classBuilder.recordComponent(name, type, signature);
-		return new AsmRecordComponentVisitor(builder);
+		var builder = classBuilder.putRecordComponent(name, type, signature);
+		return new AsmRecordComponentVisitor(builder.child());
 	}
 
 	@Override
 	public ModuleVisitor visitModule(String name, int access, String version) {
-		var builder = classBuilder.module(name, access, version);
-		return new AsmModuleVisitor(builder);
+		var builder = classBuilder.addModule(name, access, version);
+		return new AsmModuleVisitor(builder.child());
 	}
 
 	@Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-		return Util.visitAnnotation(classBuilder, descriptor, visible);
+		return Util.visitAnnotation((ClassBuilder) classBuilder, descriptor, visible);
 	}
 }

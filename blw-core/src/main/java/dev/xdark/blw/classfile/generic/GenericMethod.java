@@ -11,12 +11,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class GenericMethod extends GenericMember implements Method {
-	private final MethodType type;
-	private final Code code;
-	private final List<InstanceType> exceptionTypes;
-	private final List<Parameter> parameters;
-	private final Element annotationDefault;
+public class GenericMethod extends GenericMember<MethodType> implements Method {
+	protected final MethodType type;
+	protected final Code code;
+	protected final List<InstanceType> exceptionTypes;
+	protected final List<Parameter> parameters;
+	protected final Element annotationDefault;
 
 	public GenericMethod(int accessFlags, String name, String signature, List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations, MethodType type, Code code, List<InstanceType> exceptionTypes, List<Parameter> parameters, Element annotationDefault) {
 		super(accessFlags, name, signature, visibleRuntimeAnnotations, invisibleRuntimeAnnotations);

@@ -1,5 +1,5 @@
 package dev.xdark.blw.classfile;
 
-public interface Named {
+public sealed interface Named permits Member, MemberIdentifier, Module, RecordComponent {
 	String name();
 }

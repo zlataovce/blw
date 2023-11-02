@@ -10,13 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface Method extends Member, Reflectable<Method> {
+public interface Method extends Member<MethodType>, Reflectable<Method> {
 
 	@Nullable
 	Code code();
-
-	@Override
-	MethodType type();
 
 	List<InstanceType> exceptionTypes();
 

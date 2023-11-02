@@ -6,10 +6,10 @@ import dev.xdark.blw.type.Types;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Opcodes;
 
-class AsmArrayVisitor extends AnnotationVisitor {
-	private final ElementArrayBuilder builder;
+public class AsmArrayVisitor extends AnnotationVisitor {
+	protected final ElementArrayBuilder<?> builder;
 
-	AsmArrayVisitor(ElementArrayBuilder builder) {
+	public AsmArrayVisitor(ElementArrayBuilder<?> builder) {
 		super(Opcodes.ASM9);
 		this.builder = builder;
 	}
@@ -26,11 +26,11 @@ class AsmArrayVisitor extends AnnotationVisitor {
 
 	@Override
 	public AnnotationVisitor visitArray(String name) {
-		return new AsmArrayVisitor(builder.array());
+		return new AsmArrayVisitor(builder.array().child());
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String name, String descriptor) {
-		return new AsmAnnotationVisitor(builder.annotation(Types.instanceTypeFromDescriptor(descriptor)));
+		return new AsmAnnotationVisitor(builder.annotation(Types.instanceTypeFromDescriptor(descriptor)).child());
 	}
 }

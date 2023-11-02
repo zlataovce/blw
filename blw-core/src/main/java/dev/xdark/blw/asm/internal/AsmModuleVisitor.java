@@ -11,9 +11,9 @@ import org.objectweb.asm.Opcodes;
 import java.util.Arrays;
 
 public class AsmModuleVisitor extends ModuleVisitor {
-	private final ModuleBuilder module;
+	protected final ModuleBuilder<?> module;
 
-	protected AsmModuleVisitor(ModuleBuilder module) {
+	public AsmModuleVisitor(ModuleBuilder<?> module) {
 		super(Opcodes.ASM9);
 		this.module = module;
 	}

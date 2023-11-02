@@ -1,176 +1,340 @@
 package dev.xdark.blw.classfile.adapter;
 
 import dev.xdark.blw.annotation.AnnotationBuilder;
+import dev.xdark.blw.classfile.Module;
 import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.type.ClassType;
 import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.type.MethodType;
+import dev.xdark.blw.util.Reflectable;
+import dev.xdark.blw.util.Split;
 import dev.xdark.blw.version.JavaVersion;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ClassBuilderAdapter implements ClassBuilder {
-	protected final ClassBuilder delegate;
+public class ClassBuilderAdapter<E extends ClassFileView, B extends ClassBuilderAdapter<E, B>>
+		implements ClassBuilder<E, B> {
+	protected final ClassBuilder<E, B> delegate;
 
-	protected ClassBuilderAdapter(ClassBuilder delegate) {
+	protected ClassBuilderAdapter(@NotNull ClassBuilder<E, B> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	public ClassBuilder accessFlags(int accessFlags) {
+	@SuppressWarnings("unchecked")
+	public B accessFlags(int accessFlags) {
 		delegate.accessFlags(accessFlags);
-		return this;
+		return (B) this;
 	}
 
 	@Override
-	public ClassBuilder signature(@Nullable String signature) {
+	public @Nullable String signature() {
+		return delegate.signature();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B signature(@Nullable String signature) {
 		delegate.signature(signature);
-		return this;
+		return (B) this;
 	}
 
 	@Override
-	public AnnotationBuilder.@Nullable Nested<ClassBuilder> visibleRuntimeAnnotation(InstanceType type) {
-		return delegate.visibleRuntimeAnnotation(type);
+	@SuppressWarnings("unchecked")
+	public <A extends AnnotationBuilder<A>> Split<B, A> putVisibleRuntimeAnnotation(InstanceType type) {
+		A delegateAnno = (A) delegate.putVisibleRuntimeAnnotation(type).child();
+		return Split.of((B) this, delegateAnno);
 	}
 
 	@Override
-	public AnnotationBuilder.@Nullable Nested<ClassBuilder> invisibleRuntimeAnnotation(InstanceType type) {
-		return delegate.invisibleRuntimeAnnotation(type);
+	@SuppressWarnings("unchecked")
+	public <A extends AnnotationBuilder<A>> Split<B, A> putInvisibleRuntimeAnnotation(InstanceType type) {
+		A delegateAnno = (A) delegate.putInvisibleRuntimeAnnotation(type).child();
+		return Split.of((B) this, delegateAnno);
 	}
 
 	@Override
-	public ClassBuilder constantPool(@Nullable ConstantPool constantPool) {
-		delegate.constantPool(constantPool);
-		return this;
+	public ConstantPool getConstantPool() {
+		return delegate.getConstantPool();
 	}
 
 	@Override
-	public ClassBuilder type(InstanceType type) {
+	@SuppressWarnings("unchecked")
+	public B setConstantPool(@Nullable ConstantPool constantPool) {
+		delegate.setConstantPool(constantPool);
+		return (B) this;
+	}
+
+	@Override
+	public InstanceType getSuperClass() {
+		return delegate.getSuperClass();
+	}
+
+	@Override
+	public InstanceType type() {
+		return delegate.type();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B type(InstanceType type) {
 		delegate.type(type);
-		return this;
+		return (B) this;
 	}
 
 	@Override
-	public ClassBuilder superClass(@Nullable InstanceType superClass) {
-		delegate.superClass(superClass);
-		return this;
+	@SuppressWarnings("unchecked")
+	public B setSuperClass(@Nullable InstanceType superClass) {
+		delegate.setSuperClass(superClass);
+		return (B) this;
 	}
 
 	@Override
-	public ClassBuilder interfaces(List<InstanceType> interfaces) {
-		delegate.interfaces(interfaces);
-		return this;
+	public List<InstanceType> getInterfaces() {
+		return delegate.getInterfaces();
 	}
 
 	@Override
-	public ClassBuilder version(JavaVersion version) {
-		delegate.version(version);
-		return this;
+	@SuppressWarnings("unchecked")
+	public B addInterface(InstanceType interfaze) {
+		delegate.addInterface(interfaze);
+		return (B) this;
 	}
 
 	@Override
-	public MethodBuilder.@Nullable Nested<ClassBuilder> method(int accessFlags, String name, MethodType type) {
-		return delegate.method(accessFlags, name, type);
+	@SuppressWarnings("unchecked")
+	public B setInterfaces(List<InstanceType> interfaces) {
+		delegate.setInterfaces(interfaces);
+		return (B) this;
 	}
 
 	@Override
-	public FieldBuilder.@Nullable Nested<ClassBuilder> field(int accessFlags, String name, ClassType type) {
-		return delegate.field(accessFlags, name, type);
+	public JavaVersion getVersion() {
+		return delegate.getVersion();
 	}
 
 	@Override
-	public @Nullable RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature) {
-		return delegate.recordComponent(name, type, signature);
+	@SuppressWarnings("unchecked")
+	public B setVersion(JavaVersion version) {
+		delegate.setVersion(version);
+		return (B) this;
 	}
 
 	@Override
-	public ClassBuilder method(MethodBuilder.Root method) {
-		delegate.method(method);
-		return this;
+	public Reflectable<Field> getField(MemberIdentifier identifier) {
+		return delegate.getField(identifier);
 	}
 
 	@Override
-	public ClassBuilder field(FieldBuilder.Root field) {
-		delegate.field(field);
-		return this;
+	public Reflectable<Method> getMethod(MemberIdentifier identifier) {
+		return delegate.getMethod(identifier);
 	}
 
 	@Override
-	public ClassBuilder method(Method method) {
-		delegate.method(method);
-		return this;
+	public @Nullable FieldBuilder<Field, ?> getFieldBuilder(MemberIdentifier identifier) {
+		return delegate.getFieldBuilder(identifier);
 	}
 
 	@Override
-	public ClassBuilder field(Field field) {
-		delegate.field(field);
-		return this;
+	public @Nullable MethodBuilder<Method, ?> getMethodBuilder(MemberIdentifier identifier) {
+		return delegate.getMethodBuilder(identifier);
 	}
 
 	@Override
-	public ClassBuilder innerClasses(List<InnerClass> innerClasses) {
-		delegate.innerClasses(innerClasses);
-		return this;
+	public Reflectable<RecordComponent> getRecordComponent(MemberIdentifier identifier) {
+		return delegate.getRecordComponent(identifier);
 	}
 
 	@Override
-	public ClassBuilder innerClass(InnerClass innerClass) {
-		delegate.innerClass(innerClass);
-		return this;
+	public List<Reflectable<Method>> getMethods() {
+		return delegate.getMethods();
 	}
 
 	@Override
-	public ClassBuilder outerClass(String owner) {
-		delegate.outerClass(owner);
-		return this;
+	public List<Reflectable<Field>> getFields() {
+		return delegate.getFields();
 	}
 
 	@Override
-	public ClassBuilder outerMethod(String owner, String name, String descriptor) {
-		delegate.outerMethod(owner, name, descriptor);
-		return this;
+	public List<Reflectable<RecordComponent>> getRecordComponents() {
+		return delegate.getRecordComponents();
 	}
 
 	@Override
-	public ClassBuilder permittedSubclass(InstanceType permittedSubclass) {
-		delegate.permittedSubclass(permittedSubclass);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <M extends Method, A extends MethodBuilder<M, A>> Split<B, A> putMethod(int accessFlags, String name, MethodType type) {
+		Split<B, A> delegateSplit = delegate.putMethod(accessFlags, name, type);
+		return Split.of((B) this, delegateSplit.child());
 	}
 
 	@Override
-	public ClassBuilder nestHost(@Nullable InstanceType nestHost) {
-		delegate.nestHost(nestHost);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <F extends Field, A extends FieldBuilder<F, A>> Split<B, A> putField(int accessFlags, String name, ClassType type) {
+		Split<B, A> delegateSplit = delegate.putField(accessFlags, name, type);
+		return Split.of((B) this, delegateSplit.child());
 	}
 
 	@Override
-	public ClassBuilder nestMember(@Nullable InstanceType nestMember) {
-		delegate.nestMember(nestMember);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <A extends RecordComponentBuilder<A>> Split<B, A> putRecordComponent(String name, ClassType type, String signature) {
+		Split<B, A> delegateSplit = delegate.putRecordComponent(name, type, signature);
+		return Split.of((B) this, delegateSplit.child());
 	}
 
 	@Override
-	public ClassBuilder sourceFile(@Nullable String sourceFile) {
-		delegate.sourceFile(sourceFile);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <M extends Method, A extends MethodBuilder<M, A>> B putMethod(A method) {
+		delegate.putMethod(method);
+		return (B) this;
 	}
 
 	@Override
-	public ClassBuilder sourceDebug(@Nullable String sourceDebug) {
-		delegate.sourceDebug(sourceDebug);
-		return this;
+	@SuppressWarnings("unchecked")
+	public <F extends Field, A extends FieldBuilder<F, A>> B putField(A field) {
+		delegate.putField(field);
+		return (B) this;
 	}
 
 	@Override
-	public ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version) {
-		return delegate.module(name, access, version);
+	@SuppressWarnings("unchecked")
+	public B putMethod(Method method) {
+		delegate.putMethod(method);
+		return (B) this;
 	}
 
 	@Override
-	public ClassFileView build() {
+	@SuppressWarnings("unchecked")
+	public B putField(Field field) {
+		delegate.putField(field);
+		return (B) this;
+	}
+
+	@Override
+	public List<InnerClass> getInnerClasses() {
+		return delegate.getInnerClasses();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B setInnerClasses(List<InnerClass> innerClasses) {
+		delegate.setInnerClasses(innerClasses);
+		return (B) this;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B addInnerClass(InnerClass innerClass) {
+		delegate.addInnerClass(innerClass);
+		return (B) this;
+	}
+
+	@Override
+	public @Nullable String getOuterClass() {
+		return delegate.getOuterClass();
+	}
+
+	@Override
+	public @Nullable String getOuterMethodName() {
+		return delegate.getOuterMethodName();
+	}
+
+	@Override
+	public @Nullable String getOuterMethodDescriptor() {
+		return delegate.getOuterMethodDescriptor();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B setOuterClass(String owner) {
+		delegate.setOuterClass(owner);
+		return (B) this;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B setOuterMethod(String owner, String name, String descriptor) {
+		delegate.setOuterMethod(owner, name, descriptor);
+		return (B) this;
+	}
+
+	@Override
+	public List<InstanceType> getPermittedSubclasses() {
+		return delegate.getPermittedSubclasses();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B addPermittedSubclass(InstanceType permittedSubclass) {
+		delegate.addPermittedSubclass(permittedSubclass);
+		return (B) this;
+	}
+
+	@Override
+	public @Nullable InstanceType getNestHost() {
+		return delegate.getNestHost();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B setNestHost(@Nullable InstanceType nestHost) {
+		delegate.setNestHost(nestHost);
+		return (B) this;
+	}
+
+	@Override
+	public List<InstanceType> getNestMembers() {
+		return delegate.getNestMembers();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B addNestMember(@Nullable InstanceType nestMember) {
+		delegate.addNestMember(nestMember);
+		return (B) this;
+	}
+
+	@Override
+	public @Nullable String getSourceFile() {
+		return delegate.getSourceFile();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B setSourceFile(@Nullable String sourceFile) {
+		delegate.setSourceFile(sourceFile);
+		return (B) this;
+	}
+
+	@Override
+	public @Nullable String getSourceDebug() {
+		return delegate.getSourceDebug();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public B setSourceDebug(@Nullable String sourceDebug) {
+		delegate.setSourceDebug(sourceDebug);
+		return (B) this;
+	}
+
+	@Override
+	public List<Reflectable<Module>> getModules() {
+		return delegate.getModules();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <A extends ModuleBuilder<A>> Split<B, A> addModule(String name, int access, @Nullable String version) {
+		A delegateModule = (A) delegate.addModule(name, access, version).child();
+		return Split.of((B) this, delegateModule);
+	}
+
+	@Override
+	public E build() {
 		return delegate.build();
 	}
 }

@@ -5,9 +5,9 @@ import dev.xdark.blw.classfile.ModuleOpen;
 import java.util.List;
 
 public class GenericModuleOpen implements ModuleOpen {
-	private final int accessFlags;
-	private final String packageName;
-	private final List<String> modules;
+	protected final int accessFlags;
+	protected final String packageName;
+	protected final List<String> modules;
 
 	public GenericModuleOpen(int accessFlags, String packageName, List<String> modules) {
 		this.accessFlags = accessFlags;

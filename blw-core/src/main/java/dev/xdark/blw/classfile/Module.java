@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface Module extends Accessible, Named {
+public non-sealed interface Module extends Accessible, Named {
 	/**
 	 * @return Version of this module.
 	 */

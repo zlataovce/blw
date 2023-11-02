@@ -3,9 +3,9 @@ package dev.xdark.blw.classfile.generic;
 import dev.xdark.blw.classfile.ModuleRequire;
 
 public class GenericModuleRequire implements ModuleRequire {
-	private final int accessFlags;
-	private final String module;
-	private final String version;
+protected final int accessFlags;
+protected final String module;
+protected final String version;
 
 	public GenericModuleRequire(int accessFlags, String module, String version) {
 		this.accessFlags = accessFlags;

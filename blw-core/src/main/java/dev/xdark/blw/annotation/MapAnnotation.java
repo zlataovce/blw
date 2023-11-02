@@ -1,7 +1,5 @@
 package dev.xdark.blw.annotation;
 
-import dev.xdark.blw.annotation.Annotation;
-import dev.xdark.blw.annotation.Element;
 import dev.xdark.blw.type.InstanceType;
 import org.jetbrains.annotations.Nullable;
 
