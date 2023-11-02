@@ -1,12 +1,9 @@
 package dev.xdark.blw.classfile.generic;
 
 import dev.xdark.blw.annotation.Annotation;
-import dev.xdark.blw.classfile.ClassFileView;
-import dev.xdark.blw.classfile.Field;
 import dev.xdark.blw.classfile.Module;
-import dev.xdark.blw.classfile.RecordComponent;
+import dev.xdark.blw.classfile.*;
 import dev.xdark.blw.classfile.attribute.InnerClass;
-import dev.xdark.blw.classfile.Method;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.version.JavaVersion;
@@ -14,28 +11,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class GenericClassFileView implements ClassFileView {
-	private final JavaVersion version;
-	private final ConstantPool pool;
-	private final int accessFlags;
-	private final InstanceType type;
-	private final InstanceType superClass;
-	private final String signature;
-	private final List<InstanceType> interfaces;
-	private final List<Method> methods;
-	private final List<Field> fields;
-	private final List<RecordComponent> recordComponents;
-	private final List<InnerClass> innerClasses;
-	private final String outerClass;
-	private final String outerMethodName;
-	private final String outerMethodDescriptor;
-	private final List<InstanceType> permittedSubclasses;
-	private final InstanceType nestHost;
-	private final List<InstanceType> nestMembers;
-	private final String sourceFile, sourceDebug;
-	private final List<Annotation> visibleRuntimeAnnotations;
-	private final List<Annotation> invisibleRuntimeAnnotations;
-	private final List<Module> modules;
+public class GenericClassFileView implements ClassFileView {
+	protected final JavaVersion version;
+	protected final ConstantPool pool;
+	protected final int accessFlags;
+	protected final InstanceType type;
+	protected final InstanceType superClass;
+	protected final String signature;
+	protected final List<InstanceType> interfaces;
+	protected final List<Method> methods;
+	protected final List<Field> fields;
+	protected final List<RecordComponent> recordComponents;
+	protected final List<InnerClass> innerClasses;
+	protected final String outerClass;
+	protected final String outerMethodName;
+	protected final String outerMethodDescriptor;
+	protected final List<InstanceType> permittedSubclasses;
+	protected final InstanceType nestHost;
+	protected final List<InstanceType> nestMembers;
+	protected final String sourceFile, sourceDebug;
+	protected final List<Annotation> visibleRuntimeAnnotations;
+	protected final List<Annotation> invisibleRuntimeAnnotations;
+	protected final List<Module> modules;
 
 	public GenericClassFileView(JavaVersion version, ConstantPool pool, int accessFlags, InstanceType type,
 								InstanceType superClass, String signature, List<InstanceType> interfaces,

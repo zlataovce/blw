@@ -7,16 +7,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GenericModule implements Module {
-	private final String name;
-	private final int accessFlags;
-	private final String version;
-	private final String mainClass;
-	private final List<String> packages;
-	private final List<ModuleRequire> requires;
-	private final List<ModuleExport> exports;
-	private final List<ModuleOpen> opens;
-	private final List<ModuleProvide> provides;
-	private final List<String> uses;
+	protected final String name;
+	protected final int accessFlags;
+	protected final String version;
+	protected final String mainClass;
+	protected final List<String> packages;
+	protected final List<ModuleRequire> requires;
+	protected final List<ModuleExport> exports;
+	protected final List<ModuleOpen> opens;
+	protected final List<ModuleProvide> provides;
+	protected final List<String> uses;
 
 	public GenericModule(String name, int accessFlags, String version, String mainClass, List<String> packages, List<ModuleRequire> requires,
 						 List<ModuleExport> exports, List<ModuleOpen> opens, List<ModuleProvide> provides, List<String> uses) {

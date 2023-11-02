@@ -1,80 +1,148 @@
 package dev.xdark.blw.classfile;
 
-import dev.xdark.blw.annotation.AnnotationBuilder;
 import dev.xdark.blw.classfile.attribute.InnerClass;
 import dev.xdark.blw.classfile.generic.GenericClassBuilder;
 import dev.xdark.blw.constantpool.ConstantPool;
 import dev.xdark.blw.type.ClassType;
 import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.type.MethodType;
-import dev.xdark.blw.util.Builder;
+import dev.xdark.blw.util.Reflectable;
+import dev.xdark.blw.util.Split;
 import dev.xdark.blw.version.JavaVersion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface ClassBuilder extends AccessibleBuilder, AnnotatedBuilder, SignedBuilder, Builder.Root<ClassFileView> {
+public interface ClassBuilder<E extends ClassFileView, B extends ClassBuilder<E, B>>
+		extends AccessibleBuilder<E, B>, AnnotatedBuilder<E, B>, SignedBuilder<E, B>, TypedBuilder<InstanceType, E, B> {
 
-	@Override
-	ClassBuilder accessFlags(int accessFlags);
+	ConstantPool getConstantPool();
 
-	@Override
-	ClassBuilder signature(@Nullable String signature);
+	B setConstantPool(@Nullable ConstantPool constantPool);
 
-	@Override
-	@Nullable AnnotationBuilder.Nested<ClassBuilder> visibleRuntimeAnnotation(InstanceType type);
+	InstanceType getSuperClass();
 
-	@Override
-	@Nullable AnnotationBuilder.Nested<ClassBuilder> invisibleRuntimeAnnotation(InstanceType type);
+	B setSuperClass(@Nullable InstanceType superClass);
 
-	ClassBuilder constantPool(@Nullable ConstantPool constantPool);
+	List<InstanceType> getInterfaces();
 
-	ClassBuilder type(InstanceType type);
+	B addInterface(InstanceType interfaze);
 
-	ClassBuilder superClass(@Nullable InstanceType superClass);
+	B setInterfaces(List<InstanceType> interfaces);
 
-	ClassBuilder interfaces(List<InstanceType> interfaces);
+	JavaVersion getVersion();
 
-	ClassBuilder version(JavaVersion version);
+	B setVersion(JavaVersion version);
 
 	@Nullable
-	MethodBuilder.Nested<ClassBuilder> method(int accessFlags, String name, MethodType type);
+	Reflectable<Field> getField(MemberIdentifier identifier);
 
 	@Nullable
-	FieldBuilder.Nested<ClassBuilder> field(int accessFlags, String name, ClassType type);
+	Reflectable<Method> getMethod(MemberIdentifier identifier);
 
 	@Nullable
-	RecordComponentBuilder.Nested<ClassBuilder> recordComponent(String name, ClassType type, String signature);
+	FieldBuilder<Field, ?> getFieldBuilder(MemberIdentifier identifier);
 
-	ClassBuilder method(MethodBuilder.Root method);
+	@Nullable
+	MethodBuilder<Method, ?> getMethodBuilder(MemberIdentifier identifier);
 
-	ClassBuilder field(FieldBuilder.Root field);
+	@Nullable
+	Reflectable<RecordComponent> getRecordComponent(MemberIdentifier identifier);
 
-	ClassBuilder method(Method method);
+	@Nullable
+	default Reflectable<Field> getField(String name, String descriptor) {
+		return getField(new MemberIdentifier(name, descriptor));
+	}
 
-	ClassBuilder field(Field field);
+	@Nullable
+	default Reflectable<Method> getMethod(String name, String descriptor) {
+		return getMethod(new MemberIdentifier(name, descriptor));
+	}
 
-	ClassBuilder innerClasses(List<InnerClass> innerClasses);
+	@Nullable
+	default FieldBuilder<Field, ?> getFieldBuilder(String name, String descriptor) {
+		return getFieldBuilder(new MemberIdentifier(name, descriptor));
+	}
 
-	ClassBuilder innerClass(InnerClass innerClass);
+	@Nullable
+	default MethodBuilder<Method, ?> getMethodBuilder(String name, String descriptor) {
+		return getMethodBuilder(new MemberIdentifier(name, descriptor));
+	}
 
-	ClassBuilder outerClass(String owner);
+	@Nullable
+	default Reflectable<RecordComponent> getRecordComponent(String name, String descriptor) {
+		return getRecordComponent(new MemberIdentifier(name, descriptor));
+	}
 
-	ClassBuilder outerMethod(String owner, String name, String descriptor);
+	List<Reflectable<Field>> getFields();
 
-	ClassBuilder permittedSubclass(InstanceType permittedSubclass);
+	List<Reflectable<Method>> getMethods();
 
-	ClassBuilder nestHost(@Nullable InstanceType nestHost);
 
-	ClassBuilder nestMember(@Nullable InstanceType nestMember);
+	List<Reflectable<RecordComponent>> getRecordComponents();
 
-	ClassBuilder sourceFile(@Nullable String sourceFile);
+	<M extends Method, A extends MethodBuilder<M, A>> Split<B, A> putMethod(int accessFlags, String name, MethodType type);
 
-	ClassBuilder sourceDebug(@Nullable String sourceDebug);
+	<F extends Field, A extends FieldBuilder<F, A>> Split<B, A> putField(int accessFlags, String name, ClassType type);
 
-	ModuleBuilder.Nested<ClassBuilder> module(String name, int access, @Nullable String version);
+	<A extends RecordComponentBuilder<A>> Split<B, A> putRecordComponent(String name, ClassType type, String signature);
 
-	static ClassBuilder builder() {
-		return new GenericClassBuilder();
+	<M extends Method, A extends MethodBuilder<M, A>> B putMethod(A method);
+
+	<F extends Field, A extends FieldBuilder<F, A>> B putField(A field);
+
+	B putMethod(Method method);
+
+	B putField(Field field);
+
+	List<InnerClass> getInnerClasses();
+
+	B setInnerClasses(List<InnerClass> innerClasses);
+
+	B addInnerClass(InnerClass innerClass);
+
+	@Nullable
+	String getOuterClass();
+
+	@Nullable
+	String getOuterMethodName();
+
+	@Nullable
+	String getOuterMethodDescriptor();
+
+	B setOuterClass(String owner);
+
+	B setOuterMethod(String owner, String name, String descriptor);
+
+	List<InstanceType> getPermittedSubclasses();
+
+	B addPermittedSubclass(InstanceType permittedSubclass);
+
+	@Nullable
+	InstanceType getNestHost();
+
+	B setNestHost(@Nullable InstanceType nestHost);
+
+	List<InstanceType> getNestMembers();
+
+	B addNestMember(@Nullable InstanceType nestMember);
+
+	@Nullable
+	String getSourceFile();
+
+	B setSourceFile(@Nullable String sourceFile);
+
+	@Nullable
+	String getSourceDebug();
+
+	B setSourceDebug(@Nullable String sourceDebug);
+
+	List<Reflectable<Module>> getModules();
+
+	<A extends ModuleBuilder<A>> Split<B, A> addModule(String name, int access, @Nullable String version);
+
+	@SuppressWarnings("unchecked")
+	static <A extends ClassBuilder<? extends ClassFileView, A>> A builder() {
+		return (A) new GenericClassBuilder();
 	}
 }

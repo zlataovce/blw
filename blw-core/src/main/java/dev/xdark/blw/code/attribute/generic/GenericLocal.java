@@ -6,7 +6,6 @@ import dev.xdark.blw.type.ClassType;
 import org.jetbrains.annotations.Nullable;
 
 public final class GenericLocal implements Local {
-
 	private final Label start, end;
 	private final int index;
 	private final String name;

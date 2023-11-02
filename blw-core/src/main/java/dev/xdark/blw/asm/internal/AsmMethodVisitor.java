@@ -40,17 +40,17 @@ import java.util.Arrays;
 import static org.objectweb.asm.Opcodes.*;
 
 final class AsmMethodVisitor extends MethodVisitor {
-	private final MethodBuilder method;
-	private final CodeBuilder code;
+	private final MethodBuilder<?, ?> method;
+	private final CodeBuilder<?> code;
 	private final CodeListBuilder content;
 
-	AsmMethodVisitor(MethodBuilder method, boolean hasCode) {
+	AsmMethodVisitor(MethodBuilder<?, ?> method, boolean hasCode) {
 		super(ASM9);
 		this.method = method;
 		if (hasCode) {
-			CodeBuilder code = method.code();
+			CodeBuilder<?> code = method.code().child();
 			this.code = code;
-			content = code != null ? code.codeList() : null;
+			content = code != null ? code.codeList().child() : null;
 		} else {
 			code = null;
 			content = null;
@@ -233,13 +233,14 @@ final class AsmMethodVisitor extends MethodVisitor {
 	}
 
 	@Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-		return Util.visitAnnotation(method, descriptor, visible);
+		return Util.visitAnnotation((MethodBuilder) method, descriptor, visible);
 	}
 
 	@Override
 	public void visitLocalVariable(String name, String descriptor, String signature, Label start, Label end, int index) {
-		CodeBuilder c = code;
+		CodeBuilder<?> c = code;
 		if (c != null) {
 			c.localVariable(new GenericLocal(getLabel(start), getLabel(end), index, name, new TypeReader(descriptor).requireClassType(), signature));
 		}

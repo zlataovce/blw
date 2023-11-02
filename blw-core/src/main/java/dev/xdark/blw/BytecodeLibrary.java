@@ -9,6 +9,7 @@ import java.io.OutputStream;
 
 public interface BytecodeLibrary {
 
+	@SuppressWarnings("rawtypes")
 	void read(InputStream in, ClassBuilder classBuilder) throws IOException;
 
 	void write(ClassFileView classFileView, OutputStream os) throws IOException;

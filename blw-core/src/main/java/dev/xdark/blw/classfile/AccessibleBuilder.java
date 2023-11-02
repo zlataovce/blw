@@ -1,6 +1,8 @@
 package dev.xdark.blw.classfile;
 
-public interface AccessibleBuilder {
+import dev.xdark.blw.util.Builder;
 
-	AccessibleBuilder accessFlags(int accessFlags);
+public interface AccessibleBuilder<E extends Accessible, B extends AccessibleBuilder<E, B>>
+		extends Self<B>, Builder<E> {
+	B accessFlags(int accessFlags);
 }

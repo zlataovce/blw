@@ -13,6 +13,7 @@ import dev.xdark.blw.annotation.ElementInt;
 import dev.xdark.blw.annotation.ElementLong;
 import dev.xdark.blw.annotation.ElementShort;
 import dev.xdark.blw.annotation.ElementString;
+import dev.xdark.blw.classfile.Annotated;
 import dev.xdark.blw.classfile.AnnotatedBuilder;
 import dev.xdark.blw.constant.Constant;
 import dev.xdark.blw.constant.OfDouble;
@@ -135,13 +136,13 @@ public final class Util {
 		throw new IllegalArgumentException("Cannot convert " + value + " into annotation element");
 	}
 
-	static AnnotationVisitor visitAnnotation(AnnotatedBuilder annotations, String descriptor, boolean visible) {
+	static <E extends Annotated, A extends AnnotatedBuilder<E, A>> AnnotationVisitor visitAnnotation(A annotated, String descriptor, boolean visible) {
 		InstanceType type = Types.instanceTypeFromDescriptor(descriptor);
-		AnnotationBuilder builder;
+		AnnotationBuilder<?> builder;
 		if (visible) {
-			builder = annotations.visibleRuntimeAnnotation(type);
+			builder = annotated.putVisibleRuntimeAnnotation(type).child();
 		} else {
-			builder = annotations.invisibleRuntimeAnnotation(type);
+			builder = annotated.putInvisibleRuntimeAnnotation(type).child();
 		}
 		return builder == null ? null : new AsmAnnotationVisitor(builder);
 	}

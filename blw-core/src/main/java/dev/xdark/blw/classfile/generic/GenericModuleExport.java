@@ -5,9 +5,9 @@ import dev.xdark.blw.classfile.ModuleExport;
 import java.util.List;
 
 public class GenericModuleExport implements ModuleExport {
-	private final int accessFlags;
-	private final List<String> modules;
-	private final String packageName;
+	protected final int accessFlags;
+	protected final List<String> modules;
+	protected final String packageName;
 
 	public GenericModuleExport(int accessFlags, List<String> modules, String packageName) {
 		this.accessFlags = accessFlags;

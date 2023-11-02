@@ -7,9 +7,9 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Opcodes;
 
 final class AsmAnnotationVisitor extends AnnotationVisitor {
-	private final AnnotationBuilder builder;
+	private final AnnotationBuilder<?> builder;
 
-	AsmAnnotationVisitor(AnnotationBuilder builder) {
+	AsmAnnotationVisitor(AnnotationBuilder<?> builder) {
 		super(Opcodes.ASM9);
 		this.builder = builder;
 	}
@@ -26,11 +26,11 @@ final class AsmAnnotationVisitor extends AnnotationVisitor {
 
 	@Override
 	public AnnotationVisitor visitArray(String name) {
-		return new AsmArrayVisitor(builder.array(name));
+		return new AsmArrayVisitor(builder.array(name).child());
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String name, String descriptor) {
-		return new AsmAnnotationVisitor(builder.annotation(name, Types.instanceTypeFromDescriptor(descriptor)));
+		return new AsmAnnotationVisitor(builder.annotation(name, Types.instanceTypeFromDescriptor(descriptor)).child());
 	}
 }

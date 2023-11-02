@@ -8,12 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public non-sealed interface ClassFileView extends Accessible, Annotated, Signed {
+public non-sealed interface ClassFileView extends Accessible, Annotated, Signed, Typed<InstanceType> {
 
 	@Nullable
 	ConstantPool constantPool();
-
-	InstanceType type();
 
 	@Nullable
 	InstanceType superClass();

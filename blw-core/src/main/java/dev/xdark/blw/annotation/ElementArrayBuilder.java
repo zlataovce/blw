@@ -1,60 +1,40 @@
 package dev.xdark.blw.annotation;
 
+import dev.xdark.blw.annotation.generic.GenericArrayBuilder;
+import dev.xdark.blw.classfile.Self;
 import dev.xdark.blw.type.InstanceType;
+import dev.xdark.blw.util.Builder;
+import dev.xdark.blw.util.Split;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-sealed public interface ElementArrayBuilder permits ElementArrayBuilder.Root, ElementArrayBuilder.Nested {
+public interface ElementArrayBuilder<B extends ElementArrayBuilder<B>>
+		extends Self<B>, Builder<ElementArray> {
 
-	ElementArrayBuilder element(Element element);
+	B element(@NotNull Element element);
 
-	ElementArrayBuilder elements(List<Element> elements);
+	B element(@NotNull Builder<? extends Element> element);
 
-	AnnotationBuilder.Nested<? extends ElementArrayBuilder> annotation(InstanceType type);
+	B elements(@NotNull List<Element> elements);
 
-	Nested<? extends ElementArrayBuilder> array();
-
-	default ElementArrayBuilder elements(Element... elements) {
+	default B elements(Element... elements) {
 		return elements(List.of(elements));
 	}
 
-	non-sealed interface Root extends ElementArrayBuilder, dev.xdark.blw.util.Builder.Root<ElementArray> {
-
-		@Override
-		ElementArrayBuilder.Root element(Element element);
-
-		@Override
-		ElementArrayBuilder.Root elements(List<Element> elements);
-
-		@Override
-		AnnotationBuilder.Nested<ElementArrayBuilder.Root> annotation(InstanceType type);
-
-		@Override
-		ElementArrayBuilder.Nested<ElementArrayBuilder.Root> array();
-
-		@Override
-		default ElementArrayBuilder.Root elements(Element... elements) {
-			return (ElementArrayBuilder.Root) ElementArrayBuilder.super.elements(elements);
-		}
+	@SuppressWarnings("unchecked")
+	default <A extends AnnotationBuilder<A>>
+	Split<B, A> annotation(InstanceType type) {
+		A builder = AnnotationBuilder.newAnnotationBuilder(type);
+		element(builder);
+		return Split.of((B) this, builder);
 	}
 
-	non-sealed interface Nested<U extends dev.xdark.blw.util.Builder> extends ElementArrayBuilder, dev.xdark.blw.util.Builder.Nested<U> {
-
-		@Override
-		ElementArrayBuilder.Nested<U> element(Element element);
-
-		@Override
-		ElementArrayBuilder.Nested<U> elements(List<Element> elements);
-
-		@Override
-		AnnotationBuilder.Nested<ElementArrayBuilder.Nested<U>> annotation(InstanceType type);
-
-		@Override
-		ElementArrayBuilder.Nested<ElementArrayBuilder.Nested<U>> array();
-
-		@Override
-		default ElementArrayBuilder.Nested<U> elements(Element... elements) {
-			return (ElementArrayBuilder.Nested<U>) ElementArrayBuilder.super.elements(elements);
-		}
+	@SuppressWarnings("unchecked")
+	default <A extends ElementArrayBuilder<A>>
+	Split<B, A> array() {
+		A builder = (A) new GenericArrayBuilder();
+		element(builder);
+		return Split.of((B) this, builder);
 	}
 }

@@ -2,16 +2,17 @@ package dev.xdark.blw.classfile.generic;
 
 import dev.xdark.blw.annotation.Annotation;
 import dev.xdark.blw.classfile.Member;
+import dev.xdark.blw.type.Type;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class GenericMember implements Member {
-	private final int accessFlags;
-	private final String name;
-	private final String signature;
-	private final List<Annotation> visibleRuntimeAnnotations;
-	private final List<Annotation> invisibleRuntimeAnnotations;
+public abstract class GenericMember<T extends Type> implements Member<T> {
+	protected final int accessFlags;
+	protected final String name;
+	protected final String signature;
+	protected final List<Annotation> visibleRuntimeAnnotations;
+	protected final List<Annotation> invisibleRuntimeAnnotations;
 
 	protected GenericMember(int accessFlags, String name, String signature, List<Annotation> visibleRuntimeAnnotations, List<Annotation> invisibleRuntimeAnnotations) {
 		this.accessFlags = accessFlags;

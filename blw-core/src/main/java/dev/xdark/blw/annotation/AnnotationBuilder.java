@@ -1,36 +1,46 @@
 package dev.xdark.blw.annotation;
 
+import dev.xdark.blw.annotation.generic.GenericAnnotationBuilder;
+import dev.xdark.blw.annotation.generic.GenericArrayBuilder;
+import dev.xdark.blw.classfile.TypedBuilder;
 import dev.xdark.blw.type.InstanceType;
+import dev.xdark.blw.util.Builder;
+import dev.xdark.blw.util.Reflectable;
+import dev.xdark.blw.util.Split;
+import org.jetbrains.annotations.NotNull;
 
-sealed public interface AnnotationBuilder permits AnnotationBuilder.Root, AnnotationBuilder.Nested {
+import java.util.Map;
+import java.util.Set;
 
-	AnnotationBuilder element(String name, Element element);
+public interface AnnotationBuilder<B extends AnnotationBuilder<B>>
+		extends TypedBuilder<InstanceType, Annotation, B> {
+	@NotNull
+	Set<String> elementKeys();
 
-	Nested<? extends AnnotationBuilder> annotation(String name, InstanceType type);
+	@NotNull
+	Map<String, Reflectable<Element>> elements();
 
-	ElementArrayBuilder.Nested<? extends AnnotationBuilder> array(String name);
+	B element(@NotNull String name, @NotNull Element element);
 
-	non-sealed interface Root extends AnnotationBuilder, dev.xdark.blw.util.Builder.Root<Annotation> {
+	B element(@NotNull String name, @NotNull Builder<? extends Element> element);
 
-		@Override
-		AnnotationBuilder.Root element(String name, Element element);
-
-		@Override
-		AnnotationBuilder.Nested<AnnotationBuilder.Root> annotation(String name, InstanceType type);
-
-		@Override
-		ElementArrayBuilder.Nested<AnnotationBuilder.Root> array(String name);
+	@SuppressWarnings("unchecked")
+	default <A extends AnnotationBuilder<A>> Split<B, A> annotation(String name, InstanceType type) {
+		A annotationBuilder = newAnnotationBuilder(type);
+		element(name, annotationBuilder);
+		return Split.of((B) this, annotationBuilder);
 	}
 
-	non-sealed interface Nested<U extends dev.xdark.blw.util.Builder> extends AnnotationBuilder, dev.xdark.blw.util.Builder.Nested<U> {
+	@SuppressWarnings("unchecked")
+	default <A extends ElementArrayBuilder<A>> Split<B, A> array(String name) {
+		A annotationBuilder = (A) new GenericArrayBuilder();
+		element(name, annotationBuilder);
+		return Split.of((B) this, annotationBuilder);
+	}
 
-		@Override
-		AnnotationBuilder.Nested<U> element(String name, Element element);
-
-		@Override
-		AnnotationBuilder.Nested<AnnotationBuilder.Nested<U>> annotation(String name, InstanceType type);
-
-		@Override
-		ElementArrayBuilder.Nested<AnnotationBuilder.Nested<U>> array(String name);
+	@NotNull
+	@SuppressWarnings("unchecked")
+	static <A extends AnnotationBuilder<A>> A newAnnotationBuilder(@NotNull InstanceType type) {
+		return (A) new GenericAnnotationBuilder(type);
 	}
 }
