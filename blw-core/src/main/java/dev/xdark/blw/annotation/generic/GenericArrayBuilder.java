@@ -97,7 +97,7 @@ public abstract sealed class GenericArrayBuilder implements BuilderShadow<Elemen
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

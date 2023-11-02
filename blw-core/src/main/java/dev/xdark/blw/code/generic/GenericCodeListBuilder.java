@@ -62,7 +62,7 @@ public abstract sealed class GenericCodeListBuilder implements BuilderShadow<Lis
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

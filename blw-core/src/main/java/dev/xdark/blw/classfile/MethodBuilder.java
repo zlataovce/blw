@@ -99,4 +99,8 @@ public interface MethodBuilder extends MemberBuilder {
 	static MethodBuilder.Root builder() {
 		return new GenericMethodBuilder.Root();
 	}
+
+	static <U extends Builder> MethodBuilder.Nested<U> builder(int accessFlags, String name, MethodType type, U upstream) {
+		return new GenericMethodBuilder.Nested<>(accessFlags, name, type, upstream);
+	}
 }

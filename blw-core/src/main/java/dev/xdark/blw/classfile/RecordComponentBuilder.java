@@ -33,4 +33,8 @@ public sealed interface RecordComponentBuilder extends AnnotatedBuilder permits 
 	static RecordComponentBuilder.Root builder() {
 		return new GenericRecordComponentBuilder.Root();
 	}
+
+	static <U extends Builder> RecordComponentBuilder.Nested<U> builder(String name, ClassType type, String signature, U upstream) {
+		return new GenericRecordComponentBuilder.Nested<>(name, type, signature, upstream);
+	}
 }

@@ -117,7 +117,7 @@ permits GenericRecordComponentBuilder.Root, GenericRecordComponentBuilder.Nested
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

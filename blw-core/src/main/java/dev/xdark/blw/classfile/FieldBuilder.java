@@ -53,4 +53,8 @@ public sealed interface FieldBuilder extends MemberBuilder permits FieldBuilder.
 	static FieldBuilder.Root builder() {
 		return new GenericFieldBuilder.Root();
 	}
+
+	static <U extends Builder> FieldBuilder.Nested<U> builder(int accessFlags, String name, ClassType type, U upstream) {
+		return new GenericFieldBuilder.Nested<>(accessFlags, name, type, upstream);
+	}
 }

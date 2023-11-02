@@ -86,7 +86,7 @@ public sealed abstract class GenericModuleBuilder implements ModuleBuilder.Root 
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

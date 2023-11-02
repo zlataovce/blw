@@ -126,7 +126,7 @@ public abstract sealed class GenericFieldBuilder extends GenericMemberBuilder im
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

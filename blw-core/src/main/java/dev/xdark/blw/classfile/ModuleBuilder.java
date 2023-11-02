@@ -34,4 +34,8 @@ public sealed interface ModuleBuilder permits ModuleBuilder.Root, ModuleBuilder.
 	static ModuleBuilder.Root builder() {
 		return new GenericModuleBuilder.Root();
 	}
+
+	static <U extends Builder> ModuleBuilder.Nested<U> builder(String name, int accessFlags, String version, U upstream) {
+		return new GenericModuleBuilder.Nested<>(name, accessFlags, version, upstream);
+	}
 }

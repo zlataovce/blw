@@ -173,7 +173,7 @@ public abstract sealed class GenericCodeBuilder implements BuilderShadow<Code> p
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

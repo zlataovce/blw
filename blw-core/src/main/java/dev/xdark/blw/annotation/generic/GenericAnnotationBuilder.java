@@ -94,7 +94,7 @@ public abstract sealed class GenericAnnotationBuilder implements BuilderShadow<A
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}

@@ -223,7 +223,7 @@ public abstract sealed class GenericMethodBuilder extends GenericMemberBuilder i
 		}
 
 		@Override
-		public U __() {
+		public U upstream() {
 			return upstream;
 		}
 	}
