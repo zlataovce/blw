@@ -218,6 +218,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			for (Element e : array) {
 				visitElement(av, null, e);
 			}
+			av.visitEnd();
 			return;
 		}
 		if (element instanceof Annotation annotation) {
@@ -225,6 +226,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			for (Map.Entry<String, Element> entry : annotation) {
 				visitElement(av, entry.getKey(), entry.getValue());
 			}
+			av.visitEnd();
 			return;
 		}
 		Object value;
@@ -321,6 +323,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 			for (Map.Entry<String, Element> entry : annotation) {
 				visitElement(visitor, entry.getKey(), entry.getValue());
 			}
+			visitor.visitEnd();
 		}
 	}
 
