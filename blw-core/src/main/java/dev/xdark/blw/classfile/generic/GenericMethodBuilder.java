@@ -16,7 +16,6 @@ import java.util.List;
 
 public class GenericMethodBuilder extends GenericMemberBuilder<MethodType, GenericMethod, GenericMethodBuilder>
 		implements MethodBuilder<GenericMethod, GenericMethodBuilder> {
-	protected MethodType type;
 	protected List<InstanceType> exceptionTypes = List.of();
 	protected List<Parameter> parameters = List.of();
 	protected Reflectable<Code> code;

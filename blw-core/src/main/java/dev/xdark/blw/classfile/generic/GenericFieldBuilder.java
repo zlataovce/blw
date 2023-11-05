@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class GenericFieldBuilder extends GenericMemberBuilder<ClassType, GenericField, GenericFieldBuilder>
 		implements FieldBuilder<GenericField, GenericFieldBuilder> {
-	protected ClassType type;
 	protected Constant defaultValue;
 
 	public GenericFieldBuilder(int accessFlags, String name, ClassType type) {
