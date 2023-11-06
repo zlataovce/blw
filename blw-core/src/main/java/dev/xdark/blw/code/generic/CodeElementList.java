@@ -30,6 +30,23 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 	}
 
 	@Override
+	public void add(int index, CodeElement element) {
+		backing.add(index, element);
+		indexLabelsFrom(index);
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		int index = backing.indexOf(o);
+		if (index == -1) {
+			return false;
+		}
+		backing.remove(index);
+		indexLabelsFrom(index);
+		return true;
+	}
+
+	@Override
 	public CodeElement remove(int index) {
 		CodeElement element = backing.remove(index);
 		indexLabelsFrom(index);
