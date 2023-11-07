@@ -26,6 +26,18 @@ public class GenericCodeListBuilder implements CodeListBuilder {
 	}
 
 	@Override
+	public List<CodeElement> elements() {
+		return elements;
+	}
+
+	@Override
+	public CodeListBuilder elements(List<CodeElement> elements) {
+		this.elements.clear();
+		this.elements.addAll(elements);
+		return this;
+	}
+
+	@Override
 	public List<CodeElement> build() {
 		return new CodeElementList(elements);
 	}

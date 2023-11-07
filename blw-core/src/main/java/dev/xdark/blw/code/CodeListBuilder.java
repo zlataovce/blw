@@ -8,4 +8,8 @@ public interface CodeListBuilder extends Builder<List<CodeElement>> {
 	CodeListBuilder element(Instruction instruction);
 
 	CodeListBuilder element(Label label);
+
+	List<CodeElement> elements();
+
+	CodeListBuilder elements(List<CodeElement> elements);
 }
