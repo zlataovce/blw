@@ -2,12 +2,9 @@ package dev.xdark.blw.code.generic;
 
 import dev.xdark.blw.code.CodeElement;
 import dev.xdark.blw.code.Label;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
+import java.util.*;
 
 public final class CodeElementList extends AbstractList<CodeElement> implements List<CodeElement>, RandomAccess {
 	private final List<CodeElement> backing;
@@ -33,6 +30,30 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 	public void add(int index, CodeElement element) {
 		backing.add(index, element);
 		indexLabelsFrom(index);
+	}
+
+	@Override
+	public boolean addAll(@NotNull Collection<? extends CodeElement> c) {
+		if (c.isEmpty()) {
+			return false;
+		}
+		List<CodeElement> backing = this.backing;
+		int size = backing.size();
+		backing.addAll(c);
+		for (CodeElement element : c) {
+			index(element, size++);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends CodeElement> c) {
+		if(c.isEmpty()) return false;
+		for (CodeElement element : c) {
+			backing.add(index++, element);
+		}
+		indexLabelsFrom(index);
+		return true;
 	}
 
 	@Override
