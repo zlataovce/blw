@@ -36,6 +36,7 @@ public class AsmClassFileVisitor extends ClassVisitor {
 		if (method == null) {
 			return null;
 		}
+		method.signature(signature);
 		method.exceptionTypes(exceptions == null ? List.of() : Arrays.stream(exceptions).map(Types::instanceTypeFromInternalName).toList());
 		return new AsmMethodVisitor(method, !Modifier.isAbstract(access) && !Modifier.isNative(access));
 	}
@@ -46,6 +47,7 @@ public class AsmClassFileVisitor extends ClassVisitor {
 		if (field == null) {
 			return null;
 		}
+		field.signature(signature);
 		field.defaultValue(value == null ? null : Util.wrapConstant(value));
 		return new AsmFieldVisitor(field);
 	}
