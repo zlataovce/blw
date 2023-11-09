@@ -13,6 +13,8 @@ public sealed interface SwitchInstruction extends BranchInstruction permits Look
 
 	Label select(int key);
 
+	int[] keys();
+
 	@Override
 	default Stream<Label> allTargets() {
 		return Stream.concat(Stream.of(defaultTarget()), targets().stream());

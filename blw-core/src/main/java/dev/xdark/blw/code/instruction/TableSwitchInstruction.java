@@ -5,34 +5,11 @@ import dev.xdark.blw.code.Label;
 
 import java.util.List;
 
-public final class TableSwitchInstruction implements SwitchInstruction {
-	private final int min;
-	private final Label defaultTarget;
-	private final List<Label> targets;
-
-	public TableSwitchInstruction(int min, Label defaultTarget, List<Label> targets) {
-		this.min = min;
-		this.defaultTarget = defaultTarget;
-		this.targets = targets;
-	}
-
-	public int min() {
-		return min;
-	}
+public record TableSwitchInstruction(int min, Label defaultTarget, List<Label> targets) implements SwitchInstruction {
 
 	@Override
 	public int opcode() {
 		return JavaOpcodes.TABLESWITCH;
-	}
-
-	@Override
-	public Label defaultTarget() {
-		return defaultTarget;
-	}
-
-	@Override
-	public List<Label> targets() {
-		return targets;
 	}
 
 	@Override
@@ -43,5 +20,14 @@ public final class TableSwitchInstruction implements SwitchInstruction {
 			return targets.get(key);
 		}
 		return defaultTarget();
+	}
+
+	@Override
+	public int[] keys() {
+		int[] keys = new int[targets().size()];
+		for (int i = 0; i < keys.length; i++) {
+			keys[i] = min() + i;
+		}
+		return keys;
 	}
 }
