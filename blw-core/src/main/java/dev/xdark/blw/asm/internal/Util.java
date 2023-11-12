@@ -1,36 +1,10 @@
 package dev.xdark.blw.asm.internal;
 
-import dev.xdark.blw.annotation.AnnotationBuilder;
-import dev.xdark.blw.annotation.Element;
-import dev.xdark.blw.annotation.ElementArray;
-import dev.xdark.blw.annotation.ElementBoolean;
-import dev.xdark.blw.annotation.ElementByte;
-import dev.xdark.blw.annotation.ElementChar;
-import dev.xdark.blw.annotation.ElementDouble;
-import dev.xdark.blw.annotation.ElementEnum;
-import dev.xdark.blw.annotation.ElementFloat;
-import dev.xdark.blw.annotation.ElementInt;
-import dev.xdark.blw.annotation.ElementLong;
-import dev.xdark.blw.annotation.ElementShort;
-import dev.xdark.blw.annotation.ElementString;
+import dev.xdark.blw.annotation.*;
 import dev.xdark.blw.classfile.Annotated;
 import dev.xdark.blw.classfile.AnnotatedBuilder;
-import dev.xdark.blw.constant.Constant;
-import dev.xdark.blw.constant.OfDouble;
-import dev.xdark.blw.constant.OfDynamic;
-import dev.xdark.blw.constant.OfFloat;
-import dev.xdark.blw.constant.OfInt;
-import dev.xdark.blw.constant.OfLong;
-import dev.xdark.blw.constant.OfMethodHandle;
-import dev.xdark.blw.constant.OfString;
-import dev.xdark.blw.constant.OfType;
-import dev.xdark.blw.type.InstanceType;
-import dev.xdark.blw.type.ObjectType;
-import dev.xdark.blw.type.Type;
-import dev.xdark.blw.type.TypeReader;
-import dev.xdark.blw.type.Types;
-import dev.xdark.blw.type.ConstantDynamic;
-import dev.xdark.blw.type.MethodHandle;
+import dev.xdark.blw.constant.*;
+import dev.xdark.blw.type.*;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Handle;
 
@@ -94,6 +68,8 @@ public final class Util {
 		if (value instanceof Handle h) return new OfMethodHandle(wrapMethodHandle(h));
 		if (value instanceof org.objectweb.asm.Type t)
 			return new OfType(new TypeReader(t.getDescriptor()).required());
+		if (value instanceof org.objectweb.asm.ConstantDynamic cd)
+			return new OfDynamic(Util.wrapConstantDynamic(cd));
 		throw new IllegalArgumentException("Cannot convert " + value + " into library constant");
 	}
 
