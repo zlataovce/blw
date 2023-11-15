@@ -42,7 +42,10 @@ public final class Util {
 				cd.getName(),
 				new TypeReader(cd.getDescriptor()).requireClassType(),
 				wrapMethodHandle(cd.getBootstrapMethod()),
-				IntStream.range(0, cd.getBootstrapMethodArgumentCount()).mapToObj(Util::wrapConstant).toList()
+				IntStream.range(0, cd.getBootstrapMethodArgumentCount())
+						.mapToObj(cd::getBootstrapMethodArgument)
+						.map(Util::wrapConstant)
+						.toList()
 		);
 	}
 
