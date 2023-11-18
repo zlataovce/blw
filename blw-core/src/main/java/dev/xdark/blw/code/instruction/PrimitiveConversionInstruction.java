@@ -3,27 +3,29 @@ package dev.xdark.blw.code.instruction;
 import dev.xdark.blw.code.ExtensionOpcodes;
 import dev.xdark.blw.code.Instruction;
 import dev.xdark.blw.type.PrimitiveType;
+import org.jetbrains.annotations.NotNull;
 
 import static dev.xdark.blw.type.PrimitiveKind.*;
 
 public final class PrimitiveConversionInstruction implements Instruction {
-
 	private final PrimitiveType from, to;
 
-	public PrimitiveConversionInstruction(PrimitiveType from, PrimitiveType to) {
+	public PrimitiveConversionInstruction(@NotNull PrimitiveType from, @NotNull PrimitiveType to) {
 		this.from = from;
 		this.to = to;
 	}
 
+	@NotNull
 	public PrimitiveType from() {
 		return from;
 	}
 
+	@NotNull
 	public PrimitiveType to() {
 		return to;
 	}
 
-	public void accept(PrimitiveConversion conversion) {
+	public void accept(@NotNull PrimitiveConversion conversion) {
 		int from = this.from.kind();
 		int to = this.to.kind();
 		err:
@@ -121,5 +123,28 @@ public final class PrimitiveConversionInstruction implements Instruction {
 	@Override
 	public int opcode() {
 		return ExtensionOpcodes.PRIMITIVE_CONVERSION;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PrimitiveConversionInstruction that = (PrimitiveConversionInstruction) o;
+
+		if (!from.equals(that.from)) return false;
+		return to.equals(that.to);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = from.hashCode();
+		result = 31 * result + to.hashCode();
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return from.descriptor() +"2" + to.descriptor();
 	}
 }

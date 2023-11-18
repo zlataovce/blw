@@ -14,4 +14,24 @@ public final class SimpleInstruction implements Instruction {
 	public int opcode() {
 		return opcode;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SimpleInstruction that = (SimpleInstruction) o;
+
+		return opcode == that.opcode;
+	}
+
+	@Override
+	public int hashCode() {
+		return opcode;
+	}
+
+	@Override
+	public String toString() {
+		return "insn-" + opcode;
+	}
 }

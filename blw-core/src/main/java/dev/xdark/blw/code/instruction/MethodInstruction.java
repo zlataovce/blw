@@ -2,6 +2,7 @@ package dev.xdark.blw.code.instruction;
 
 import dev.xdark.blw.type.MethodType;
 import dev.xdark.blw.type.ObjectType;
+import org.jetbrains.annotations.NotNull;
 
 public final class MethodInstruction implements MemberInstruction {
 	private final int opcode;
@@ -24,17 +25,17 @@ public final class MethodInstruction implements MemberInstruction {
 	}
 
 	@Override
-	public ObjectType owner() {
+	public @NotNull ObjectType owner() {
 		return owner;
 	}
 
 	@Override
-	public String name() {
+	public @NotNull String name() {
 		return name;
 	}
 
 	@Override
-	public MethodType type() {
+	public @NotNull MethodType type() {
 		return descriptor;
 	}
 

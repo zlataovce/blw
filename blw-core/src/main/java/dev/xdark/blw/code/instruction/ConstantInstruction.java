@@ -12,6 +12,8 @@ import dev.xdark.blw.constant.OfDouble;
 import dev.xdark.blw.constant.OfLong;
 import dev.xdark.blw.constant.OfInt;
 
+import java.util.Objects;
+
 public abstract sealed class ConstantInstruction<C extends Constant> implements Instruction
 		permits ConstantInstruction.String,
 		ConstantInstruction.MethodHandle,
@@ -29,6 +31,21 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 
 	public final C constant() {
 		return constant;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ConstantInstruction<?> that = (ConstantInstruction<?>) o;
+
+		return Objects.equals(constant, that.constant);
+	}
+
+	@Override
+	public int hashCode() {
+		return constant != null ? constant.hashCode() : 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -64,6 +81,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		public int opcode() {
 			return ExtensionOpcodes.STRING_CONSTANT;
 		}
+
+		@Override
+		public java.lang.String toString() {
+			return "string " + constant.value();
+		}
 	}
 
 	public static final class MethodHandle extends ConstantInstruction<OfMethodHandle> {
@@ -75,6 +97,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		@Override
 		public int opcode() {
 			return ExtensionOpcodes.METHOD_HANDLE_CONSTANT;
+		}
+
+		@Override
+		public java.lang.String toString() {
+			return "handle " + constant.value();
 		}
 	}
 
@@ -88,6 +115,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		public int opcode() {
 			return ExtensionOpcodes.DYNAMIC_CONSTANT;
 		}
+
+		@Override
+		public java.lang.String toString() {
+			return "dynamic " + constant.value();
+		}
 	}
 
 	public static final class Long extends ConstantInstruction<OfLong> {
@@ -99,6 +131,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		@Override
 		public int opcode() {
 			return ExtensionOpcodes.LONG_CONSTANT;
+		}
+
+		@Override
+		public java.lang.String toString() {
+			return "long " + constant.value();
 		}
 	}
 
@@ -112,6 +149,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		public int opcode() {
 			return ExtensionOpcodes.DOUBLE_CONSTANT;
 		}
+
+		@Override
+		public java.lang.String toString() {
+			return "double " + constant.value();
+		}
 	}
 
 	public static final class Int extends ConstantInstruction<OfInt> {
@@ -123,6 +165,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		@Override
 		public int opcode() {
 			return ExtensionOpcodes.INT_CONSTANT;
+		}
+
+		@Override
+		public java.lang.String toString() {
+			return "int " + constant.value();
 		}
 	}
 
@@ -136,6 +183,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		public int opcode() {
 			return ExtensionOpcodes.FLOAT_CONSTANT;
 		}
+
+		@Override
+		public java.lang.String toString() {
+			return "float " + constant.value();
+		}
 	}
 
 	public static final class Type extends ConstantInstruction<OfType> {
@@ -147,6 +199,11 @@ public abstract sealed class ConstantInstruction<C extends Constant> implements 
 		@Override
 		public int opcode() {
 			return ExtensionOpcodes.TYPE_CONSTANT;
+		}
+
+		@Override
+		public java.lang.String toString() {
+			return "type " + constant.value();
 		}
 	}
 }

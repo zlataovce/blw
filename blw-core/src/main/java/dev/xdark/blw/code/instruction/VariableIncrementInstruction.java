@@ -23,4 +23,27 @@ public final class VariableIncrementInstruction implements Instruction {
 	public int opcode() {
 		return JavaOpcodes.IINC;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		VariableIncrementInstruction that = (VariableIncrementInstruction) o;
+
+		if (variableIndex != that.variableIndex) return false;
+		return incrementBy == that.incrementBy;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = variableIndex;
+		result = 31 * result + incrementBy;
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "iinc v" + variableIndex + ((incrementBy >= 0) ? "+" : "") + incrementBy;
+	}
 }
