@@ -3,10 +3,12 @@ package dev.xdark.blw.code.instruction;
 import dev.xdark.blw.code.Label;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 public final class ConditionalJumpInstruction implements BranchInstruction {
-
 	private final int opcode;
 	private final Label target;
 
@@ -26,7 +28,7 @@ public final class ConditionalJumpInstruction implements BranchInstruction {
 	}
 
 	@Override
-	public @NotNull Stream<Label> allTargets() {
+	public @NotNull Stream<Label> targetsStream() {
 		return Stream.of(target);
 	}
 

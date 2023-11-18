@@ -8,5 +8,5 @@ import java.util.stream.Stream;
 
 public interface BranchInstruction extends Instruction {
 	@NotNull
-	Stream<Label> allTargets();
+	Stream<Label> targetsStream();
 }

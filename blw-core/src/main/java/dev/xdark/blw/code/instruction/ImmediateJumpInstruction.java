@@ -25,7 +25,7 @@ public final class ImmediateJumpInstruction implements BranchInstruction {
 	}
 
 	@Override
-	public @NotNull Stream<Label> allTargets() {
+	public @NotNull Stream<Label> targetsStream() {
 		return Stream.of(target);
 	}
 

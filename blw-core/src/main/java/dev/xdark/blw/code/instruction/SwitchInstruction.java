@@ -18,7 +18,7 @@ public sealed interface SwitchInstruction extends BranchInstruction permits Look
 	int[] keys();
 
 	@Override
-	default @NotNull Stream<Label> allTargets() {
+	default @NotNull Stream<Label> targetsStream() {
 		return Stream.concat(Stream.of(defaultTarget()), targets().stream());
 	}
 }
