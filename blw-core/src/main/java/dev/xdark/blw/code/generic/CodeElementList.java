@@ -78,10 +78,10 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 	public CodeElement set(int index, CodeElement element) {
 		CodeElement previous = backing.set(index, element);
 		if (previous instanceof Label l) {
-			l.index(Label.UNSET);
+			l.setIndex(Label.UNSET);
 		}
 		if (element instanceof Label l) {
-			l.index(index);
+			l.setIndex(index);
 		}
 		return previous;
 	}
@@ -153,10 +153,10 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 				CodeElement old = backing.get(index);
 				iterator.set(element);
 				if (old instanceof Label l) {
-					l.index(Label.UNSET);
+					l.setIndex(Label.UNSET);
 				}
 				if (element instanceof Label l) {
-					l.index(index);
+					l.setIndex(index);
 				}
 			}
 
@@ -171,7 +171,7 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 
 	private void index(CodeElement element, int idx) {
 		if (element instanceof Label l) {
-			l.index(idx);
+			l.setIndex(idx);
 		}
 	}
 
@@ -179,7 +179,7 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 		List<CodeElement> backing = this.backing;
 		for (int end = backing.size(); from < end; from++) {
 			if (backing.get(from) instanceof Label l) {
-				l.index(from);
+				l.setIndex(from);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public final class CodeElementList extends AbstractList<CodeElement> implements 
 		List<CodeElement> backing = this.backing;
 		for (int i = backing.size(); i != 0; ) {
 			if (backing.get(--i) instanceof Label l) {
-				l.index(i);
+				l.setIndex(i);
 			}
 		}
 	}

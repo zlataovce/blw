@@ -53,7 +53,7 @@ public class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
 		MethodVisitor mv = this.mv;
 		org.objectweb.asm.Label l = labelMapping.getLabel(label);
 		mv.visitLabel(l);
-		int line = label.lineNumber();
+		int line = label.getLineNumber();
 		if (line != Label.UNSET) {
 			mv.visitLineNumber(line, l);
 		}

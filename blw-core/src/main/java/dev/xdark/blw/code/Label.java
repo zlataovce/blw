@@ -3,11 +3,11 @@ package dev.xdark.blw.code;
 public non-sealed interface Label extends CodeElement {
 	int UNSET = -1;
 
-	int index();
+	int getIndex();
 
-	void index(int index);
+	void setIndex(int index);
 
-	int lineNumber();
+	int getLineNumber();
 
-	void lineNumber(int lineNumber);
+	void setLineNumber(int lineNumber);
 }

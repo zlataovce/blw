@@ -213,7 +213,7 @@ final class AsmMethodVisitor extends MethodVisitor {
 	public void visitLabel(Label label) {
 		CodeListBuilder content = this.content;
 		if (content == null) return;
-		content.element(getLabel(label));
+		content.addLabel(getLabel(label));
 	}
 
 	@Override
@@ -229,7 +229,7 @@ final class AsmMethodVisitor extends MethodVisitor {
 	@Override
 	public void visitLineNumber(int line, Label start) {
 		if (content == null) return;
-		getLabel(start).lineNumber(line);
+		getLabel(start).setLineNumber(line);
 	}
 
 	@Override
@@ -270,6 +270,6 @@ final class AsmMethodVisitor extends MethodVisitor {
 	}
 
 	private void add(Instruction instruction) {
-		content.element(instruction);
+		content.addInstruction(instruction);
 	}
 }

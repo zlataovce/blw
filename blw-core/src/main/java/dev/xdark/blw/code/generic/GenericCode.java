@@ -66,7 +66,7 @@ public final class GenericCode implements Code {
 
 			@Override
 			public void set(Label label) {
-				int index = label.index();
+				int index = label.getIndex();
 				if (index == Label.UNSET) {
 					throw new IllegalStateException("Label index is not set");
 				}
