@@ -33,6 +33,7 @@ public final class PrimitiveType implements ClassType {
 	public PrimitiveType widen(@NotNull PrimitiveType other) {
 		int kind = this.kind;
 		int otherKind = other.kind;
+		if (kind == otherKind) return this;
 		return switch (kind) {
 			case PrimitiveKind.T_BOOLEAN -> widenBooleanTo(otherKind);
 			case PrimitiveKind.T_BYTE -> widenByteTo(otherKind);
