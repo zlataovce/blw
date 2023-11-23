@@ -25,6 +25,18 @@ public final class Types {
 			SHORT = createPrimitiveType("S", T_SHORT, "short"),
 			BYTE = createPrimitiveType("B", T_BYTE, "byte"),
 			BOOLEAN = createPrimitiveType("Z", T_BOOLEAN, "boolean");
+	public static final InstanceType
+			OBJECT = Types.instanceType(Object.class),
+			STRING = Types.instanceType(String.class),
+			BOX_VOID = Types.instanceType(Void.class),
+			BOX_LONG = Types.instanceType(Long.class),
+			BOX_DOUBLE = Types.instanceType(Double.class),
+			BOX_INT = Types.instanceType(Integer.class),
+			BOX_FLOAT = Types.instanceType(Float.class),
+			BOX_CHAR = Types.instanceType(Character.class),
+			BOX_SHORT = Types.instanceType(Short.class),
+			BOX_BYTE = Types.instanceType(Byte.class),
+			BOX_BOOLEAN = Types.instanceType(Boolean.class);
 	public static final int CATEGORY2 = 2;
 	public static final int CATEGORY1 = 1;
 
