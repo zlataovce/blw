@@ -6,16 +6,16 @@ import dev.xdark.blw.classfile.RecordComponentBuilder;
 import dev.xdark.blw.type.ClassType;
 import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.util.Builder;
+import dev.xdark.blw.util.LazyList;
 import dev.xdark.blw.util.Split;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GenericRecordComponentBuilder implements RecordComponentBuilder<GenericRecordComponentBuilder> {
-	protected final List<AnnotationBuilder<?>> visibleRuntimeAnnotations = new ArrayList<>();
-	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotation = new ArrayList<>();
+	protected final List<AnnotationBuilder<?>> visibleRuntimeAnnotations = LazyList.arrayList();
+	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotation = LazyList.arrayList();
 	protected String name;
 	protected ClassType type;
 	protected String signature;

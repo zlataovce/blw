@@ -7,19 +7,17 @@ import dev.xdark.blw.classfile.MemberBuilder;
 import dev.xdark.blw.type.InstanceType;
 import dev.xdark.blw.type.Type;
 import dev.xdark.blw.util.Builder;
+import dev.xdark.blw.util.LazyList;
 import dev.xdark.blw.util.Split;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, B extends GenericMemberBuilder<T, M, B>>
 		implements MemberBuilder<T, M, B> {
-	protected final Map<InstanceType, AnnotationBuilder<?>> visibleRuntimeAnnotations = new LinkedHashMap<>();
-	protected final Map<InstanceType, AnnotationBuilder<?>> invisibleRuntimeAnnotation = new LinkedHashMap<>();
+	protected final List<AnnotationBuilder<?>> visibleRuntimeAnnotations = LazyList.arrayList();
+	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotation = LazyList.arrayList();
 	protected T type;
 	protected int accessFlags;
 	protected String name;
@@ -72,7 +70,7 @@ public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, 
 	@SuppressWarnings("unchecked")
 	public <A extends AnnotationBuilder<A>> Split<B, A> putVisibleRuntimeAnnotation(InstanceType type) {
 		A anno = AnnotationBuilder.newAnnotationBuilder(type);
-		visibleRuntimeAnnotations.put(type, anno);
+		visibleRuntimeAnnotations.add(anno);
 		return Split.of((B) this, anno);
 	}
 
@@ -80,17 +78,17 @@ public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, 
 	@SuppressWarnings("unchecked")
 	public <A extends AnnotationBuilder<A>> Split<B, A> putInvisibleRuntimeAnnotation(InstanceType type) {
 		A anno = AnnotationBuilder.newAnnotationBuilder(type);
-		invisibleRuntimeAnnotation.put(type, anno);
+		invisibleRuntimeAnnotation.add(anno);
 		return Split.of((B) this, anno);
 	}
 
 	@NotNull
 	protected final List<Annotation> visibleRuntimeAnnotations() {
-		return visibleRuntimeAnnotations.values().stream().map(Builder::build).toList();
+		return visibleRuntimeAnnotations.stream().map(Builder::build).toList();
 	}
 
 	@NotNull
 	protected final List<Annotation> invisibleRuntimeAnnotation() {
-		return invisibleRuntimeAnnotation.values().stream().map(Builder::build).toList();
+		return invisibleRuntimeAnnotation.stream().map(Builder::build).toList();
 	}
 }
