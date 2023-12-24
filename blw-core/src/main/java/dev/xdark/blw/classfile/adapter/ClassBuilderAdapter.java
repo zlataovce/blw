@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static dev.xdark.blw.util.SneakyCast.cast;
+
 public class ClassBuilderAdapter<E extends ClassFileView, B extends ClassBuilderAdapter<E, B>>
 		implements ClassBuilder<E, B> {
 	protected final ClassBuilder<E, B> delegate;
@@ -44,17 +46,27 @@ public class ClassBuilderAdapter<E extends ClassFileView, B extends ClassBuilder
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <A extends AnnotationBuilder<A>> Split<B, A> putVisibleRuntimeAnnotation(InstanceType type) {
-		A delegateAnno = (A) delegate.putVisibleRuntimeAnnotation(type).child();
-		return Split.of((B) this, delegateAnno);
+	public @NotNull <A extends AnnotationBuilder<A>> List<A> getVisibleRuntimeAnnotations() {
+		return delegate.getVisibleRuntimeAnnotations();
+	}
+
+	@Override
+	public @NotNull <A extends AnnotationBuilder<A>> List<A> getInvisibleRuntimeAnnotation() {
+		return delegate.getInvisibleRuntimeAnnotation();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <A extends AnnotationBuilder<A>> Split<B, A> putInvisibleRuntimeAnnotation(InstanceType type) {
-		A delegateAnno = (A) delegate.putInvisibleRuntimeAnnotation(type).child();
-		return Split.of((B) this, delegateAnno);
+	public @NotNull <A extends AnnotationBuilder<A>> Split<B, A> addVisibleRuntimeAnnotation(@NotNull InstanceType type) {
+		A delegateBuilder = (A) delegate.addVisibleRuntimeAnnotation(type).child();
+		return cast(Split.of(this, delegateBuilder));
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public @NotNull <A extends AnnotationBuilder<A>> Split<B, A> addInvisibleRuntimeAnnotation(@NotNull InstanceType type) {
+		A delegateBuilder = (A) delegate.addInvisibleRuntimeAnnotation(type).child();
+		return cast(Split.of(this, delegateBuilder));
 	}
 
 	@Override

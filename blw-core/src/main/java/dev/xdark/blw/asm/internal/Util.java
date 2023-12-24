@@ -119,9 +119,9 @@ public final class Util {
 		InstanceType type = Types.instanceTypeFromDescriptor(descriptor);
 		AnnotationBuilder<?> builder;
 		if (visible) {
-			builder = annotated.putVisibleRuntimeAnnotation(type).child();
+			builder = annotated.addVisibleRuntimeAnnotation(type).child();
 		} else {
-			builder = annotated.putInvisibleRuntimeAnnotation(type).child();
+			builder = annotated.addInvisibleRuntimeAnnotation(type).child();
 		}
 		return builder == null ? null : new AsmAnnotationVisitor(builder);
 	}

@@ -28,7 +28,7 @@ public class GenericFieldBuilder extends GenericMemberBuilder<ClassType, Generic
 
 	@Override
 	public final GenericField build() {
-		return new GenericField(accessFlags, name, signature, visibleRuntimeAnnotations(), invisibleRuntimeAnnotation(),
+		return new GenericField(accessFlags, name, signature, buildVisibleRuntimeAnnotations(), buildInvisibleRuntimeAnnotation(),
 				type, defaultValue);
 	}
 }

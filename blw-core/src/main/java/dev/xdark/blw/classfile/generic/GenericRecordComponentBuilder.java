@@ -1,11 +1,8 @@
 package dev.xdark.blw.classfile.generic;
 
-import dev.xdark.blw.annotation.Annotation;
 import dev.xdark.blw.annotation.AnnotationBuilder;
 import dev.xdark.blw.classfile.RecordComponentBuilder;
 import dev.xdark.blw.type.ClassType;
-import dev.xdark.blw.type.InstanceType;
-import dev.xdark.blw.util.Builder;
 import dev.xdark.blw.util.LazyList;
 import dev.xdark.blw.util.Split;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +25,7 @@ public class GenericRecordComponentBuilder implements RecordComponentBuilder<Gen
 
 	@Override
 	public GenericRecordComponent build() {
-		return new GenericRecordComponent(name, signature, type, visibleRuntimeAnnotations(), invisibleRuntimeAnnotation());
+		return new GenericRecordComponent(name, signature, type, buildVisibleRuntimeAnnotations(), buildInvisibleRuntimeAnnotation());
 	}
 
 	@Override
@@ -66,27 +63,13 @@ public class GenericRecordComponentBuilder implements RecordComponentBuilder<Gen
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ab extends AnnotationBuilder<Ab>> Split<GenericRecordComponentBuilder, Ab> putVisibleRuntimeAnnotation(InstanceType type) {
-		var builder = AnnotationBuilder.newAnnotationBuilder(type);
-		visibleRuntimeAnnotations.add(builder);
-		return (Split<GenericRecordComponentBuilder, Ab>) Split.of(this, builder);
+	public @NotNull List<AnnotationBuilder<?>> getVisibleRuntimeAnnotations() {
+		return visibleRuntimeAnnotations;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <Ab extends AnnotationBuilder<Ab>> Split<GenericRecordComponentBuilder, Ab> putInvisibleRuntimeAnnotation(InstanceType type) {
-		var builder = AnnotationBuilder.newAnnotationBuilder(type);
-		invisibleRuntimeAnnotations.add(builder);
-		return (Split<GenericRecordComponentBuilder, Ab>) Split.of(this, builder);
-	}
-
-	@NotNull
-	protected final List<Annotation> visibleRuntimeAnnotations() {
-		return visibleRuntimeAnnotations.stream().map(Builder::build).toList();
-	}
-
-	@NotNull
-	protected final List<Annotation> invisibleRuntimeAnnotation() {
-		return invisibleRuntimeAnnotations.stream().map(Builder::build).toList();
+	public @NotNull List<AnnotationBuilder<?>> getInvisibleRuntimeAnnotation() {
+		return invisibleRuntimeAnnotations;
 	}
 }

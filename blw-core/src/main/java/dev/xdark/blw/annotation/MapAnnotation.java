@@ -1,6 +1,7 @@
 package dev.xdark.blw.annotation;
 
 import dev.xdark.blw.type.InstanceType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -22,7 +23,7 @@ public final class MapAnnotation implements Annotation {
 	}
 
 	@Override
-	public Collection<String> names() {
+	public @NotNull Collection<String> names() {
 		return map.keySet();
 	}
 

@@ -78,19 +78,16 @@ public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, G
 	}
 
 	@Override
-	public <A extends AnnotationBuilder<A>> Split<GenericClassBuilder, A> putVisibleRuntimeAnnotation(InstanceType type) {
-		A builder = AnnotationBuilder.newAnnotationBuilder(type);
-		visibleRuntimeAnnotations.add(builder);
-		return Split.of(this, builder);
+	@SuppressWarnings("unchecked")
+	public @NotNull List<AnnotationBuilder<?>> getVisibleRuntimeAnnotations() {
+		return visibleRuntimeAnnotations;
 	}
 
 	@Override
-	public <A extends AnnotationBuilder<A>> Split<GenericClassBuilder, A> putInvisibleRuntimeAnnotation(InstanceType type) {
-		A builder = AnnotationBuilder.newAnnotationBuilder(type);
-		invisibleRuntimeAnnotations.add(builder);
-		return Split.of(this, builder);
+	@SuppressWarnings("unchecked")
+	public @NotNull List<AnnotationBuilder<?>> getInvisibleRuntimeAnnotation() {
+		return invisibleRuntimeAnnotations;
 	}
-
 	@Override
 	public ConstantPool getConstantPool() {
 		return pool;
@@ -385,8 +382,8 @@ public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, G
 				nestMembers,
 				sourceFile,
 				sourceDebug,
-				buildList(visibleRuntimeAnnotations),
-				buildList(invisibleRuntimeAnnotations),
+				buildVisibleRuntimeAnnotations(),
+				buildVisibleRuntimeAnnotations(),
 				buildList(modules)
 		);
 	}
