@@ -383,7 +383,7 @@ public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, G
 				sourceFile,
 				sourceDebug,
 				buildVisibleRuntimeAnnotations(),
-				buildVisibleRuntimeAnnotations(),
+				buildInvisibleRuntimeAnnotation(),
 				buildList(modules)
 		);
 	}
