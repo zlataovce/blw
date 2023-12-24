@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, B extends GenericMemberBuilder<T, M, B>>
 		implements MemberBuilder<T, M, B> {
 	protected final List<AnnotationBuilder<?>> visibleRuntimeAnnotations = LazyList.arrayList();
-	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotation = LazyList.arrayList();
+	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotations = LazyList.arrayList();
 	protected T type;
 	protected int accessFlags;
 	protected String name;
@@ -78,7 +78,7 @@ public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, 
 	@SuppressWarnings("unchecked")
 	public <A extends AnnotationBuilder<A>> Split<B, A> putInvisibleRuntimeAnnotation(InstanceType type) {
 		A anno = AnnotationBuilder.newAnnotationBuilder(type);
-		invisibleRuntimeAnnotation.add(anno);
+		invisibleRuntimeAnnotations.add(anno);
 		return Split.of((B) this, anno);
 	}
 
@@ -89,6 +89,6 @@ public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, 
 
 	@NotNull
 	protected final List<Annotation> invisibleRuntimeAnnotation() {
-		return invisibleRuntimeAnnotation.stream().map(Builder::build).toList();
+		return invisibleRuntimeAnnotations.stream().map(Builder::build).toList();
 	}
 }

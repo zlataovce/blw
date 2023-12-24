@@ -20,7 +20,7 @@ import java.util.Map;
 public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, GenericClassBuilder> {
 	protected final List<InstanceType> interfaces = LazyList.arrayList();
 	protected final List<AnnotationBuilder<?>> visibleRuntimeAnnotations = LazyList.arrayList();
-	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotation = LazyList.arrayList();
+	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotations = LazyList.arrayList();
 	protected final Map<MemberIdentifier, Reflectable<Method>> methods = LazyMap.linked();
 	protected final Map<MemberIdentifier, Reflectable<Field>> fields = LazyMap.linked();
 	protected final Map<MemberIdentifier, Reflectable<RecordComponent>> recordComponents = LazyMap.linked();
@@ -87,7 +87,7 @@ public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, G
 	@Override
 	public <A extends AnnotationBuilder<A>> Split<GenericClassBuilder, A> putInvisibleRuntimeAnnotation(InstanceType type) {
 		A builder = AnnotationBuilder.newAnnotationBuilder(type);
-		invisibleRuntimeAnnotation.add(builder);
+		invisibleRuntimeAnnotations.add(builder);
 		return Split.of(this, builder);
 	}
 
@@ -386,7 +386,7 @@ public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, G
 				sourceFile,
 				sourceDebug,
 				buildList(visibleRuntimeAnnotations),
-				buildList(invisibleRuntimeAnnotation),
+				buildList(invisibleRuntimeAnnotations),
 				buildList(modules)
 		);
 	}

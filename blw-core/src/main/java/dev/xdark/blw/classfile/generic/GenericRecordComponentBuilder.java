@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GenericRecordComponentBuilder implements RecordComponentBuilder<GenericRecordComponentBuilder> {
 	protected final List<AnnotationBuilder<?>> visibleRuntimeAnnotations = LazyList.arrayList();
-	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotation = LazyList.arrayList();
+	protected final List<AnnotationBuilder<?>> invisibleRuntimeAnnotations = LazyList.arrayList();
 	protected String name;
 	protected ClassType type;
 	protected String signature;
@@ -76,7 +76,7 @@ public class GenericRecordComponentBuilder implements RecordComponentBuilder<Gen
 	@SuppressWarnings("unchecked")
 	public <Ab extends AnnotationBuilder<Ab>> Split<GenericRecordComponentBuilder, Ab> putInvisibleRuntimeAnnotation(InstanceType type) {
 		var builder = AnnotationBuilder.newAnnotationBuilder(type);
-		invisibleRuntimeAnnotation.add(builder);
+		invisibleRuntimeAnnotations.add(builder);
 		return (Split<GenericRecordComponentBuilder, Ab>) Split.of(this, builder);
 	}
 
@@ -87,6 +87,6 @@ public class GenericRecordComponentBuilder implements RecordComponentBuilder<Gen
 
 	@NotNull
 	protected final List<Annotation> invisibleRuntimeAnnotation() {
-		return invisibleRuntimeAnnotation.stream().map(Builder::build).toList();
+		return invisibleRuntimeAnnotations.stream().map(Builder::build).toList();
 	}
 }
