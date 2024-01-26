@@ -33,6 +33,11 @@ public final class ConditionalJumpInstruction implements BranchInstruction {
 	}
 
 	@Override
+	public boolean hasFallthrough() {
+		return true;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

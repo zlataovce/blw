@@ -21,4 +21,9 @@ public sealed interface SwitchInstruction extends BranchInstruction permits Look
 	default @NotNull Stream<Label> targetsStream() {
 		return Stream.concat(Stream.of(defaultTarget()), targets().stream());
 	}
+
+	@Override
+	default boolean hasFallthrough() {
+		return false;
+	}
 }

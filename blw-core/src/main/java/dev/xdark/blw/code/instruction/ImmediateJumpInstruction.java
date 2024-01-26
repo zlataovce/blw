@@ -30,6 +30,11 @@ public final class ImmediateJumpInstruction implements BranchInstruction {
 	}
 
 	@Override
+	public boolean hasFallthrough() {
+		return false;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
