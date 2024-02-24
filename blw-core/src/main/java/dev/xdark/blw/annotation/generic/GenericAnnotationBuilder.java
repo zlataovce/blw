@@ -9,13 +9,11 @@ import dev.xdark.blw.util.Builder;
 import dev.xdark.blw.util.Reflectable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GenericAnnotationBuilder implements AnnotationBuilder<GenericAnnotationBuilder> {
-	protected final Map<String, Object> elements = new HashMap<>();
+	protected final Map<String, Object> elements = new LinkedHashMap<>();
 	protected InstanceType type;
 
 	public GenericAnnotationBuilder(InstanceType type) {
@@ -28,7 +26,9 @@ public class GenericAnnotationBuilder implements AnnotationBuilder<GenericAnnota
 		return new MapAnnotation(type, elements.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> {
 			Object value = e.getValue();
 			return value instanceof Element element ? element : ((Builder<Element>) value).build();
-		})));
+		}, (m1, m2) -> {
+			throw new IllegalStateException("Merge of duplicate annotation value keys not allowed");
+		}, LinkedHashMap::new)));
 	}
 
 	@Override
@@ -42,7 +42,9 @@ public class GenericAnnotationBuilder implements AnnotationBuilder<GenericAnnota
 		return elements.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> {
 			Object value = e.getValue();
 			return value instanceof Element element ? Reflectable.wrap(element) : (Builder<Element>) value;
-		}));
+		}, (m1, m2) -> {
+			throw new IllegalStateException("Merge of duplicate annotation value keys not allowed");
+		}, LinkedHashMap::new));
 	}
 
 	@Override
