@@ -108,9 +108,9 @@ public final class Util {
 		if (value instanceof Short s) return new ElementShort(s);
 		if (value instanceof Byte b) return new ElementByte(b);
 		if (value instanceof Boolean b) return new ElementBoolean(b);
-		if (value instanceof String[] a) return new ElementEnum(
-				Types.instanceTypeFromInternalName(a[0]), a[1]
-		);
+		if (value instanceof org.objectweb.asm.Type t)
+			return new ElementType(Types.instanceTypeFromDescriptor(t.getDescriptor()));
+		if (value instanceof String[] a) return new ElementEnum(Types.instanceTypeFromInternalName(a[0]), a[1]);
 		if (value instanceof List<?> list) return new ElementArray(list.stream().map(Util::wrapElement));
 		throw new IllegalArgumentException("Cannot convert " + value + " into annotation element");
 	}
