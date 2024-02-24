@@ -43,6 +43,19 @@ public final class Types {
 	private Types() {
 	}
 
+	public static Type typeFromDescriptor(String descriptor) {
+		if (descriptor == null || descriptor.isEmpty())
+			throw new IllegalArgumentException("Descriptor cannot be empty");
+		char c = descriptor.charAt(0);
+		if (c == '[')
+			return arrayTypeFromDescriptor(descriptor);
+		else if (c == '(')
+			return methodType(descriptor);
+		else if (c == 'L')
+			return instanceTypeFromDescriptor(descriptor);
+		throw new IllegalArgumentException("Descriptor not an array, method, or object type: " + descriptor);
+	}
+
 	public static InstanceType instanceTypeFromDescriptor(String descriptor) {
 		return new InstanceType(descriptor, descriptor.substring(1, descriptor.length() - 1));
 	}
