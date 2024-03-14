@@ -1,5 +1,6 @@
 package dev.xdark.blw.code.instruction;
 
+import dev.xdark.blw.code.JavaOpcodes;
 import dev.xdark.blw.type.MethodType;
 import dev.xdark.blw.type.ObjectType;
 import org.jetbrains.annotations.NotNull;
@@ -41,5 +42,41 @@ public final class MethodInstruction implements MemberInstruction {
 
 	public boolean isInterface() {
 		return isInterface;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MethodInstruction that = (MethodInstruction) o;
+
+		if (opcode != that.opcode) return false;
+		if (isInterface != that.isInterface) return false;
+		if (!owner.equals(that.owner)) return false;
+		if (!name.equals(that.name)) return false;
+		return descriptor.equals(that.descriptor);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = opcode;
+		result = 31 * result + owner.hashCode();
+		result = 31 * result + name.hashCode();
+		result = 31 * result + descriptor.hashCode();
+		result = 31 * result + (isInterface ? 1 : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		String suffix = owner.internalName() + "." + name + descriptor.descriptor();
+		return switch (opcode) {
+			case JavaOpcodes.INVOKEVIRTUAL -> "invoke-virtual";
+			case JavaOpcodes.INVOKESPECIAL -> "invoke-special";
+			case JavaOpcodes.INVOKESTATIC -> "invoke-static";
+			case JavaOpcodes.INVOKEINTERFACE -> "invoke-interface";
+			default -> "invoke-? ";
+		} + suffix;
 	}
 }
