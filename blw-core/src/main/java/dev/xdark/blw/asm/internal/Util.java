@@ -3,17 +3,95 @@ package dev.xdark.blw.asm.internal;
 import dev.xdark.blw.annotation.*;
 import dev.xdark.blw.classfile.Annotated;
 import dev.xdark.blw.classfile.AnnotatedBuilder;
+import dev.xdark.blw.code.Instruction;
+import dev.xdark.blw.code.instruction.*;
 import dev.xdark.blw.constant.*;
 import dev.xdark.blw.type.*;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Handle;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import static org.objectweb.asm.Opcodes.*;
 
 public final class Util {
 
 	private Util() {
+	}
+
+	public static Instruction wrapInsn(int opcode) {
+		return switch (opcode) {
+			case ICONST_M1,
+					ICONST_0,
+					ICONST_1,
+					ICONST_2,
+					ICONST_3,
+					ICONST_4,
+					ICONST_5 -> new ConstantInstruction.Int(new OfInt(opcode - ICONST_0));
+			case LCONST_0, LCONST_1 -> new ConstantInstruction.Long(new OfLong(opcode - LCONST_0));
+			case FCONST_0, FCONST_1, FCONST_2 -> new ConstantInstruction.Float(new OfFloat(opcode - FCONST_0));
+			case DCONST_0, DCONST_1 -> new ConstantInstruction.Double(new OfDouble(opcode - DCONST_0));
+			default -> switch (opcode) {
+				case I2L -> new PrimitiveConversionInstruction(Types.INT, Types.LONG);
+				case I2F -> new PrimitiveConversionInstruction(Types.INT, Types.FLOAT);
+				case I2D -> new PrimitiveConversionInstruction(Types.INT, Types.DOUBLE);
+				case L2I -> new PrimitiveConversionInstruction(Types.LONG, Types.INT);
+				case L2F -> new PrimitiveConversionInstruction(Types.LONG, Types.FLOAT);
+				case L2D -> new PrimitiveConversionInstruction(Types.LONG, Types.DOUBLE);
+				case F2I -> new PrimitiveConversionInstruction(Types.FLOAT, Types.INT);
+				case F2L -> new PrimitiveConversionInstruction(Types.FLOAT, Types.LONG);
+				case F2D -> new PrimitiveConversionInstruction(Types.FLOAT, Types.DOUBLE);
+				case D2I -> new PrimitiveConversionInstruction(Types.DOUBLE, Types.INT);
+				case D2L -> new PrimitiveConversionInstruction(Types.DOUBLE, Types.LONG);
+				case D2F -> new PrimitiveConversionInstruction(Types.DOUBLE, Types.FLOAT);
+				case I2B -> new PrimitiveConversionInstruction(Types.INT, Types.BYTE);
+				case I2C -> new PrimitiveConversionInstruction(Types.INT, Types.CHAR);
+				case I2S -> new PrimitiveConversionInstruction(Types.INT, Types.SHORT);
+				default -> new SimpleInstruction(opcode);
+			};
+		};
+	}
+
+	public static ConstantInstruction<? extends Constant> wrapLdcInsn(Object value) {
+		return ConstantInstruction.wrap(Util.wrapConstant(value));
+	}
+
+	public static Instruction wrapTypeInsn(int opcode, String type) {
+		ObjectType objectType = Types.objectTypeFromInternalName(type);
+		return switch (opcode) {
+			case CHECKCAST -> new CheckCastInstruction(objectType);
+			case INSTANCEOF -> new InstanceofInstruction(objectType);
+			case NEW -> new AllocateInstruction(objectType);
+			case ANEWARRAY -> new AllocateInstruction(Types.arrayType(objectType));
+			default -> throw new IllegalStateException("Unexpected value: " + opcode);
+		};
+	}
+
+	public static Instruction wrapIntInsn(int opcode, int operand) {
+		return switch (opcode) {
+			case BIPUSH, SIPUSH -> new ConstantInstruction.Int(new OfInt(operand));
+			case NEWARRAY -> new AllocateInstruction(Types.arrayType(Types.primitiveOfKind(operand)));
+			default -> throw new IllegalStateException("Unexpected value: " + opcode);
+		};
+	}
+
+	public static FieldInstruction wrapFieldInsn(int opcode, String owner, String name, String descriptor) {
+		return new FieldInstruction(opcode, Types.instanceTypeFromInternalName(owner), name, new TypeReader(descriptor).requireClassType());
+	}
+
+	public static MethodInstruction wrapMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
+		return new MethodInstruction(opcode, Types.objectTypeFromInternalName(owner), name, Types.methodType(descriptor), isInterface);
+	}
+
+	public static InvokeDynamicInstruction wrapInvokeDynamicInsn(String name, String descriptor, Handle bootstrapMethodHandle, Object[] bootstrapMethodArguments) {
+		return new InvokeDynamicInstruction(
+				name,
+				new TypeReader(descriptor).required(),
+				Util.wrapMethodHandle(bootstrapMethodHandle),
+				Arrays.stream(bootstrapMethodArguments).map(Util::wrapConstant).toList()
+		);
 	}
 
 	public static MethodHandle wrapMethodHandle(Handle handle) {
