@@ -33,6 +33,10 @@ public class ClassBuilderAdapter<E extends ClassFileView, B extends ClassBuilder
 		return (B) this;
 	}
 
+	public int accessFlags() {
+		return delegate.accessFlags();
+	}
+
 	@Override
 	public @Nullable String signature() {
 		return delegate.signature();
