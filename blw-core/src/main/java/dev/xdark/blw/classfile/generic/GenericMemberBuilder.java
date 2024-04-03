@@ -42,6 +42,11 @@ public abstract class GenericMemberBuilder<T extends Type, M extends Member<T>, 
 	}
 
 	@Override
+	public int accessFlags() {
+		return accessFlags;
+	}
+
+	@Override
 	public String name() {
 		return name;
 	}

@@ -67,6 +67,11 @@ public class GenericClassBuilder implements ClassBuilder<GenericClassFileView, G
 	}
 
 	@Override
+	public int accessFlags() {
+		return accessFlags;
+	}
+
+	@Override
 	public @Nullable String signature() {
 		return signature;
 	}
