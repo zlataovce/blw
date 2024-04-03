@@ -35,12 +35,12 @@ public class AsmModuleVisitor extends ModuleVisitor {
 
 	@Override
 	public void visitExport(String packaze, int access, String... modules) {
-		module.export(new GenericModuleExport(access, Arrays.asList(modules), packaze));
+		module.export(new GenericModuleExport(access, modules == null ? null : Arrays.asList(modules), packaze));
 	}
 
 	@Override
 	public void visitOpen(String packaze, int access, String... modules) {
-		module.open(new GenericModuleOpen(access, packaze, Arrays.asList(modules)));
+		module.open(new GenericModuleOpen(access, packaze, modules == null ? null : Arrays.asList(modules)));
 	}
 
 	@Override

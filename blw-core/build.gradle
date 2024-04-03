@@ -1,3 +1,4 @@
 dependencies {
     compileOnly 'org.ow2.asm:asm:9.6'
+    testRuntimeOnly 'org.ow2.asm:asm:9.6'
 }

@@ -143,7 +143,7 @@ public final class InternalAsmLibrary implements BytecodeLibrary {
 				for (ModuleRequire require : ensureNonNull(module.requires()))
 					mv.visitRequire(require.module(), require.accessFlags(), require.version());
 				for (ModuleOpen open : ensureNonNull(module.opens()))
-					mv.visitOpen(open.packageName(), open.accessFlags(), open.modules().toArray(String[]::new));
+					mv.visitOpen(open.packageName(), open.accessFlags(), open.modules() == null ? null : open.modules().toArray(String[]::new));
 				for (ModuleProvide provide : ensureNonNull(module.provides()))
 					mv.visitProvide(provide.service(), provide.providers().toArray(String[]::new));
 				for (String use : ensureNonNull(module.uses()))

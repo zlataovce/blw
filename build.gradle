@@ -19,20 +19,19 @@ subprojects {
         maven { url = 'https://jitpack.io' }
     }
 
-    configurations {
-        testImplementation.extendsFrom implementation
-        testImplementation.extendsFrom compileOnly
-    }
-
     dependencies {
         compileOnly 'org.jetbrains:annotations:24.1.0'
 
-        testImplementation platform('org.junit:junit-bom:5.9.3')
-        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.2'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     }
 
     test {
         useJUnitPlatform()
+
+        systemProperty 'junit.jupiter.execution.parallel.enabled', true
+        systemProperty 'junit.jupiter.execution.parallel.mode.default', 'concurrent'
     }
 
     publishing {
