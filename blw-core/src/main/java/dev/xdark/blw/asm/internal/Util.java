@@ -10,6 +10,7 @@ import dev.xdark.blw.type.*;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Handle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -184,12 +185,45 @@ public final class Util {
 		if (value instanceof Float f) return new ElementFloat(f);
 		if (value instanceof Character c) return new ElementChar(c);
 		if (value instanceof Short s) return new ElementShort(s);
-		if (value instanceof Byte b) return new ElementByte(b);
-		if (value instanceof Boolean b) return new ElementBoolean(b);
+		if (value instanceof Byte b) return ElementByte.of(b);
+		if (value instanceof Boolean b) return ElementBoolean.of(b);
 		if (value instanceof org.objectweb.asm.Type t)
 			return new ElementType(Types.instanceTypeFromDescriptor(t.getDescriptor()));
 		if (value instanceof String[] a) return new ElementEnum(Types.instanceTypeFromInternalName(a[0]), a[1]);
 		if (value instanceof List<?> list) return new ElementArray(list.stream().map(Util::wrapElement));
+		if (value instanceof int[] ia) return new ElementArray(Arrays.stream(ia).mapToObj(ElementInt::new));
+		if (value instanceof long[] la) return new ElementArray(Arrays.stream(la).mapToObj(ElementLong::new));
+		if (value instanceof double[] da) return new ElementArray(Arrays.stream(da).mapToObj(ElementDouble::new));
+		if (value instanceof byte[] ba) {
+			List<Element> list = new ArrayList<>(ba.length);
+			for (byte v : ba)
+				list.add(ElementByte.of(v));
+			return new ElementArray(list);
+		}
+		if (value instanceof float[] fa) {
+			List<Element> list = new ArrayList<>(fa.length);
+			for (float v : fa)
+				list.add(new ElementFloat(v));
+			return new ElementArray(list);
+		}
+		if (value instanceof char[] ca) {
+			List<Element> list = new ArrayList<>(ca.length);
+			for (char v : ca)
+				list.add(new ElementChar(v));
+			return new ElementArray(list);
+		}
+		if (value instanceof short[] sa) {
+			List<Element> list = new ArrayList<>(sa.length);
+			for (short v : sa)
+				list.add(new ElementShort(v));
+			return new ElementArray(list);
+		}
+		if (value instanceof boolean[] ba) {
+			List<Element> list = new ArrayList<>(ba.length);
+			for (boolean v : ba)
+				list.add(ElementBoolean.of(v));
+			return new ElementArray(list);
+		}
 		throw new IllegalArgumentException("Cannot convert " + value + " into annotation element");
 	}
 

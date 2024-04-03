@@ -31,4 +31,24 @@ public final class ElementArray implements Element, Iterable<Element> {
 	public Iterator<Element> iterator() {
 		return elements.iterator();
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ElementArray elements1 = (ElementArray) o;
+
+		return elements.equals(elements1.elements);
+	}
+
+	@Override
+	public int hashCode() {
+		return elements.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "EArray[" + elements.size() + ']';
+	}
 }

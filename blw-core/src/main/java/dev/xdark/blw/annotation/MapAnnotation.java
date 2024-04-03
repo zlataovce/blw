@@ -36,4 +36,30 @@ public final class MapAnnotation implements Annotation {
 	public Iterator<Map.Entry<String, Element>> iterator() {
 		return map.entrySet().iterator();
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MapAnnotation entries = (MapAnnotation) o;
+
+		if (!type.equals(entries.type)) return false;
+		return map.equals(entries.map);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = type.hashCode();
+		result = 31 * result + map.hashCode();
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Annotation{" +
+				"type=" + type +
+				", elements=" + map +
+				'}';
+	}
 }
