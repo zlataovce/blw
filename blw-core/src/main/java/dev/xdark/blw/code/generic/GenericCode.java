@@ -10,30 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class GenericCode implements Code {
-	private final int maxStack;
-	private final int maxLocals;
-	private final List<CodeElement> elements;
-	private final List<TryCatchBlock> tryCatchBlocks;
-	private final List<Local> localVariables;
+public record GenericCode(int maxStack, int maxLocals, List<CodeElement> elements, List<TryCatchBlock> tryCatchBlocks,
+						  List<Local> localVariables) implements Code {
 
-	public GenericCode(int maxStack, int maxLocals, List<CodeElement> elements, List<TryCatchBlock> tryCatchBlocks, List<Local> localVariables) {
-		this.maxStack = maxStack;
-		this.maxLocals = maxLocals;
-		this.elements = elements;
-		this.tryCatchBlocks = tryCatchBlocks;
-		this.localVariables = localVariables;
-	}
-
-	@Override
-	public int maxStack() {
-		return maxStack;
-	}
-
-	@Override
-	public int maxLocals() {
-		return maxLocals;
-	}
 
 	@Override
 	public CodeWalker walker() {
@@ -76,18 +55,5 @@ public final class GenericCode implements Code {
 		};
 	}
 
-	@Override
-	public List<CodeElement> elements() {
-		return elements;
-	}
 
-	@Override
-	public List<Local> localVariables() {
-		return localVariables;
-	}
-
-	@Override
-	public List<TryCatchBlock> tryCatchBlocks() {
-		return tryCatchBlocks;
-	}
 }

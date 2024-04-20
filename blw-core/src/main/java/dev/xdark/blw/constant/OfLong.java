@@ -1,15 +1,7 @@
 package dev.xdark.blw.constant;
 
-public final class OfLong implements Constant {
-	private final long value;
+public record OfLong(long value) implements Constant {
 
-	public OfLong(long value) {
-		this.value = value;
-	}
-
-	public long value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {

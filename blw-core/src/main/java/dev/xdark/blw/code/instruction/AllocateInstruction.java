@@ -5,9 +5,7 @@ import dev.xdark.blw.code.ExtensionOpcodes;
 import dev.xdark.blw.type.ObjectType;
 import org.jetbrains.annotations.NotNull;
 
-public final class AllocateInstruction implements Instruction {
-
-	private final ObjectType type;
+public record AllocateInstruction(ObjectType type) implements Instruction {
 
 	public AllocateInstruction(@NotNull ObjectType type) {
 		this.type = type;
@@ -18,24 +16,10 @@ public final class AllocateInstruction implements Instruction {
 		return ExtensionOpcodes.ALLOCATE;
 	}
 
+	@Override
 	@NotNull
 	public ObjectType type() {
 		return type;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		AllocateInstruction that = (AllocateInstruction) o;
-
-		return type.equals(that.type);
-	}
-
-	@Override
-	public int hashCode() {
-		return type.hashCode();
 	}
 
 	@Override

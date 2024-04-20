@@ -7,22 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static dev.xdark.blw.type.PrimitiveKind.*;
 
-public final class PrimitiveConversionInstruction implements Instruction {
-	private final PrimitiveType from, to;
-
+public record PrimitiveConversionInstruction(PrimitiveType from, PrimitiveType to) implements Instruction {
 	public PrimitiveConversionInstruction(@NotNull PrimitiveType from, @NotNull PrimitiveType to) {
 		this.from = from;
 		this.to = to;
-	}
-
-	@NotNull
-	public PrimitiveType from() {
-		return from;
-	}
-
-	@NotNull
-	public PrimitiveType to() {
-		return to;
 	}
 
 	public void accept(@NotNull PrimitiveConversion conversion) {
@@ -126,25 +114,7 @@ public final class PrimitiveConversionInstruction implements Instruction {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		PrimitiveConversionInstruction that = (PrimitiveConversionInstruction) o;
-
-		if (!from.equals(that.from)) return false;
-		return to.equals(that.to);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = from.hashCode();
-		result = 31 * result + to.hashCode();
-		return result;
-	}
-
-	@Override
 	public String toString() {
-		return from.descriptor() +"2" + to.descriptor();
+		return from.descriptor() + "2" + to.descriptor();
 	}
 }

@@ -1,15 +1,7 @@
 package dev.xdark.blw.constant;
 
-public final class OfDouble implements Constant {
-	private final double value;
+public record OfDouble(double value) implements Constant {
 
-	public OfDouble(double value) {
-		this.value = value;
-	}
-
-	public double value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {

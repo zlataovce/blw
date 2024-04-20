@@ -5,16 +5,9 @@ import dev.xdark.blw.code.JavaOpcodes;
 import dev.xdark.blw.type.ObjectType;
 import org.jetbrains.annotations.NotNull;
 
-public final class InstanceofInstruction implements Instruction {
-	private final ObjectType type;
-
+public record InstanceofInstruction(ObjectType type) implements Instruction {
 	public InstanceofInstruction(@NotNull ObjectType type) {
 		this.type = type;
-	}
-
-	@NotNull
-	public ObjectType type() {
-		return type;
 	}
 
 	@Override
@@ -30,11 +23,6 @@ public final class InstanceofInstruction implements Instruction {
 		InstanceofInstruction that = (InstanceofInstruction) o;
 
 		return type.equals(that.type);
-	}
-
-	@Override
-	public int hashCode() {
-		return type.hashCode();
 	}
 
 	@Override

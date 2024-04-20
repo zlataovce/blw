@@ -2,17 +2,8 @@ package dev.xdark.blw.constant;
 
 import dev.xdark.blw.type.MethodHandle;
 
-public final class OfMethodHandle implements ReferenceConstant<MethodHandle> {
-	private final MethodHandle value;
+public record OfMethodHandle(MethodHandle value) implements ReferenceConstant<MethodHandle> {
 
-	public OfMethodHandle(MethodHandle value) {
-		this.value = value;
-	}
-
-	@Override
-	public MethodHandle value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {
@@ -26,8 +17,4 @@ public final class OfMethodHandle implements ReferenceConstant<MethodHandle> {
 		return value.equals(that.value);
 	}
 
-	@Override
-	public int hashCode() {
-		return value.hashCode();
-	}
 }

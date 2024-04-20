@@ -3,41 +3,7 @@ package dev.xdark.blw.code.instruction;
 import dev.xdark.blw.code.Instruction;
 import dev.xdark.blw.code.JavaOpcodes;
 
-public final class VarInstruction implements Instruction {
-	private final int opcode;
-	private final int variableIndex;
-
-	public VarInstruction(int opcode, int variableIndex) {
-		this.opcode = opcode;
-		this.variableIndex = variableIndex;
-	}
-
-	@Override
-	public int opcode() {
-		return opcode;
-	}
-
-	public int variableIndex() {
-		return variableIndex;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		VarInstruction that = (VarInstruction) o;
-
-		if (opcode != that.opcode) return false;
-		return variableIndex == that.variableIndex;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = opcode;
-		result = 31 * result + variableIndex;
-		return result;
-	}
+public record VarInstruction(int opcode, int variableIndex) implements Instruction {
 
 	@Override
 	public String toString() {

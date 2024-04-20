@@ -1,16 +1,7 @@
 package dev.xdark.blw.constant;
 
-public final class OfString implements ReferenceConstant<String> {
-	private final String value;
+public record OfString(String value) implements ReferenceConstant<String> {
 
-	public OfString(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public String value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {
@@ -24,8 +15,4 @@ public final class OfString implements ReferenceConstant<String> {
 		return value.equals(that.value);
 	}
 
-	@Override
-	public int hashCode() {
-		return value.hashCode();
-	}
 }

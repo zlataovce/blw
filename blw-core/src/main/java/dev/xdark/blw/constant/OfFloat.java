@@ -1,15 +1,7 @@
 package dev.xdark.blw.constant;
 
-public final class OfFloat implements Constant {
-	private final float value;
+public record OfFloat(float value) implements Constant {
 
-	public OfFloat(float value) {
-		this.value = value;
-	}
-
-	public float value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {

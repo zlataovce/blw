@@ -1,15 +1,7 @@
 package dev.xdark.blw.constant;
 
-public final class OfInt implements Constant {
-	private final int value;
+public record OfInt(int value) implements Constant {
 
-	public OfInt(int value) {
-		this.value = value;
-	}
-
-	public int value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {

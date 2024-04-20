@@ -2,17 +2,8 @@ package dev.xdark.blw.constant;
 
 import dev.xdark.blw.type.Type;
 
-public final class OfType implements ReferenceConstant<Type> {
-	private final Type value;
+public record OfType(Type value) implements ReferenceConstant<Type> {
 
-	public OfType(Type value) {
-		this.value = value;
-	}
-
-	@Override
-	public Type value() {
-		return value;
-	}
 
 	@Override
 	public void accept(ConstantSink sink) {
@@ -26,8 +17,4 @@ public final class OfType implements ReferenceConstant<Type> {
 		return value.equals(that.value);
 	}
 
-	@Override
-	public int hashCode() {
-		return value.hashCode();
-	}
 }

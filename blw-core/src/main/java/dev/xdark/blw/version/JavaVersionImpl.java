@@ -1,23 +1,7 @@
 package dev.xdark.blw.version;
 
-final class JavaVersionImpl implements JavaVersion {
+record JavaVersionImpl(int majorVersion, int minorVersion) implements JavaVersion {
 	private static final int PREVIEW_FEATURES = 0xFFFF;
-	private final int majorVersion, minorVersion;
-
-	JavaVersionImpl(int majorVersion, int minorVersion) {
-		this.majorVersion = majorVersion;
-		this.minorVersion = minorVersion;
-	}
-
-	@Override
-	public int majorVersion() {
-		return majorVersion;
-	}
-
-	@Override
-	public int minorVersion() {
-		return minorVersion;
-	}
 
 	@Override
 	public int pack() {
@@ -46,23 +30,4 @@ final class JavaVersionImpl implements JavaVersion {
 		return majorVersion - CLASS_VERSION_OFFSET;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		JavaVersionImpl that = (JavaVersionImpl) o;
-
-		if (majorVersion != that.majorVersion) return false;
-		if (minorVersion != that.minorVersion) return false;
-
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = majorVersion;
-		result = 31 * result + minorVersion;
-		return result;
-	}
 }

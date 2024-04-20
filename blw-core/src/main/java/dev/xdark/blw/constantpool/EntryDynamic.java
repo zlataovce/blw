@@ -2,19 +2,11 @@ package dev.xdark.blw.constantpool;
 
 import dev.xdark.blw.constant.OfDynamic;
 
-public final class EntryDynamic implements Entry {
-	private final OfDynamic value;
+public record EntryDynamic(OfDynamic value) implements Entry {
 
-	public EntryDynamic(OfDynamic value) {
-		this.value = value;
-	}
 
-	public OfDynamic value() {
-		return value;
-	}
-
-	@Override
-	public int tag() {
-		return Tag.Dynamic;
-	}
+    @Override
+    public int tag() {
+        return Tag.Dynamic;
+    }
 }

@@ -1,33 +1,8 @@
 package dev.xdark.blw.annotation;
 
-public final class ElementChar implements Element {
-	private final char value;
+import dev.xdark.blw.annotation.Element;
 
-	public ElementChar(char value) {
-		this.value = value;
-	}
+public record ElementChar(char value) implements Element {
 
-	public char value() {
-		return value;
-	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		ElementChar that = (ElementChar) o;
-
-		return value == that.value;
-	}
-
-	@Override
-	public int hashCode() {
-		return value;
-	}
-
-	@Override
-	public String toString() {
-		return "EChar{" + value + '}';
-	}
 }

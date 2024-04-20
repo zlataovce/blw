@@ -4,22 +4,7 @@ import dev.xdark.blw.classfile.ModuleProvide;
 
 import java.util.List;
 
-public class GenericModuleProvide implements ModuleProvide {
-	protected final String service;
-	protected final List<String> providers;
+public record GenericModuleProvide(String service, List<String> providers) implements ModuleProvide {
 
-	public GenericModuleProvide(String service, List<String> providers) {
-		this.providers = providers;
-		this.service = service;
-	}
 
-	@Override
-	public List<String> providers() {
-		return providers;
-	}
-
-	@Override
-	public String service() {
-		return service;
-	}
 }
