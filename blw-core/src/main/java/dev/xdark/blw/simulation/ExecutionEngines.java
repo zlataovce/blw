@@ -1,21 +1,7 @@
 package dev.xdark.blw.simulation;
 
-import dev.xdark.blw.code.instruction.AllocateInstruction;
-import dev.xdark.blw.code.instruction.CheckCastInstruction;
-import dev.xdark.blw.code.instruction.ConditionalJumpInstruction;
-import dev.xdark.blw.code.instruction.ConstantInstruction;
-import dev.xdark.blw.code.instruction.FieldInstruction;
-import dev.xdark.blw.code.instruction.ImmediateJumpInstruction;
-import dev.xdark.blw.code.instruction.InstanceofInstruction;
 import dev.xdark.blw.code.Instruction;
-import dev.xdark.blw.code.instruction.InvokeDynamicInstruction;
-import dev.xdark.blw.code.instruction.LookupSwitchInstruction;
-import dev.xdark.blw.code.instruction.MethodInstruction;
-import dev.xdark.blw.code.instruction.PrimitiveConversionInstruction;
-import dev.xdark.blw.code.instruction.SimpleInstruction;
-import dev.xdark.blw.code.instruction.TableSwitchInstruction;
-import dev.xdark.blw.code.instruction.VarInstruction;
-import dev.xdark.blw.code.instruction.VariableIncrementInstruction;
+import dev.xdark.blw.code.instruction.*;
 
 public final class ExecutionEngines {
 
@@ -53,6 +39,8 @@ public final class ExecutionEngines {
 			engine.execute((ConstantInstruction<?>) instruction);
 		} else if (instruction instanceof PrimitiveConversionInstruction i) {
 			engine.execute(i);
+		} else if (instruction instanceof AllocateMultiDimArrayInstruction a) {
+			engine.execute(a);
 		} else {
 			engine.execute(instruction);
 		}
