@@ -24,6 +24,12 @@ public final class ArrayType implements ObjectType {
 		return componentType;
 	}
 
+	public ClassType rootComponentType() {
+		if (componentType instanceof ArrayType arrayComponent)
+			return arrayComponent.rootComponentType();
+		return componentType;
+	}
+
 	@Override
 	public String descriptor() {
 		String descriptor = this.descriptor;
