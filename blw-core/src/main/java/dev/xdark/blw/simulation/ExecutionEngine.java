@@ -1,22 +1,8 @@
 package dev.xdark.blw.simulation;
 
 import dev.xdark.blw.code.Label;
-import dev.xdark.blw.code.instruction.AllocateInstruction;
-import dev.xdark.blw.code.instruction.CheckCastInstruction;
-import dev.xdark.blw.code.instruction.ConditionalJumpInstruction;
-import dev.xdark.blw.code.instruction.FieldInstruction;
-import dev.xdark.blw.code.instruction.ImmediateJumpInstruction;
-import dev.xdark.blw.code.instruction.InstanceofInstruction;
+import dev.xdark.blw.code.instruction.*;
 import dev.xdark.blw.code.Instruction;
-import dev.xdark.blw.code.instruction.InvokeDynamicInstruction;
-import dev.xdark.blw.code.instruction.LookupSwitchInstruction;
-import dev.xdark.blw.code.instruction.MethodInstruction;
-import dev.xdark.blw.code.instruction.PrimitiveConversionInstruction;
-import dev.xdark.blw.code.instruction.SimpleInstruction;
-import dev.xdark.blw.code.instruction.TableSwitchInstruction;
-import dev.xdark.blw.code.instruction.VarInstruction;
-import dev.xdark.blw.code.instruction.VariableIncrementInstruction;
-import dev.xdark.blw.code.instruction.ConstantInstruction;
 
 public interface ExecutionEngine {
 
@@ -37,6 +23,8 @@ public interface ExecutionEngine {
 	void execute(CheckCastInstruction instruction);
 
 	void execute(AllocateInstruction instruction);
+
+	void execute(AllocateMultiDimArrayInstruction instruction);
 
 	void execute(MethodInstruction instruction);
 

@@ -10,5 +10,6 @@ public interface ExtensionOpcodes {
 	int FLOAT_CONSTANT = 209;
 	int TYPE_CONSTANT = 210;
 	int ALLOCATE = 211;
-	int PRIMITIVE_CONVERSION = 212;
+	int ALLOCATE_MULTI_ARRAY = 212;
+	int PRIMITIVE_CONVERSION = 213;
 }

@@ -94,7 +94,7 @@ final class AsmMethodVisitor extends MethodVisitor {
 	@Override
 	public void visitMultiANewArrayInsn(String descriptor, int numDimensions) {
 		if (content == null) return;
-		add(new AllocateInstruction(Types.arrayTypeFromDescriptor(descriptor)));
+		add(new AllocateMultiDimArrayInstruction(Types.arrayTypeFromDescriptor(descriptor), numDimensions));
 	}
 
 	@Override
