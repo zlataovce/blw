@@ -47,13 +47,16 @@ public final class Types {
 		if (descriptor == null || descriptor.isEmpty())
 			throw new IllegalArgumentException("Descriptor cannot be empty");
 		char c = descriptor.charAt(0);
-		if (c == '[')
-			return arrayTypeFromDescriptor(descriptor);
-		else if (c == '(')
-			return methodType(descriptor);
-		else if (c == 'L')
-			return instanceTypeFromDescriptor(descriptor);
-		throw new IllegalArgumentException("Descriptor not an array, method, or object type: " + descriptor);
+		return switch (c) {
+			case '[' -> arrayTypeFromDescriptor(descriptor);
+			case '(' -> methodType(descriptor);
+			case 'L' -> instanceTypeFromDescriptor(descriptor);
+			default -> {
+				if (descriptor.length() == 1)
+					yield primitiveFromChar(c);
+				throw new IllegalArgumentException("Descriptor not an array, primitive, method, or object type: " + descriptor);
+			}
+		};
 	}
 
 	public static InstanceType instanceTypeFromDescriptor(String descriptor) {
@@ -137,7 +140,13 @@ public final class Types {
 	}
 
 	public static PrimitiveType primitiveFromDesc(String descriptor) {
+		if (descriptor.length() != 1)
+			throw new IllegalArgumentException("Primitive descriptor must be 1 char");
 		char c = descriptor.charAt(0);
+		return primitiveFromChar(c);
+	}
+
+	public static PrimitiveType primitiveFromChar(char c) {
 		return switch (c) {
 			case 'V' -> VOID;
 			case 'J' -> LONG;
@@ -148,7 +157,7 @@ public final class Types {
 			case 'S' -> SHORT;
 			case 'B' -> BYTE;
 			case 'Z' -> BOOLEAN;
-			default -> throw new IllegalStateException("Unexpected value: " + c);
+			default -> throw new IllegalStateException("Unexpected primitive: " + c);
 		};
 	}
 
@@ -198,7 +207,7 @@ public final class Types {
 	public static int category(ClassType type) {
 		if (type instanceof PrimitiveType pt) {
 			int kind = pt.kind();
-			if (kind == PrimitiveKind.T_LONG || kind == PrimitiveKind.T_DOUBLE) {
+			if (kind == T_LONG || kind == T_DOUBLE) {
 				return CATEGORY2;
 			}
 		}
