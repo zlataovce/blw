@@ -152,14 +152,11 @@ public class AsmDumpEngine implements ExecutionEngine, PrimitiveConversion {
 			mv.visitTypeInsn(Opcodes.NEW, instance.internalName());
 		} else {
 			ArrayType arrayType = (ArrayType) type;
-			int dimensions = arrayType.dimensions();
-			if (dimensions == 1) {
-				ClassType component = arrayType.componentType();
-				if (component instanceof ObjectType objectComponent) {
-					mv.visitTypeInsn(Opcodes.ANEWARRAY, objectComponent.internalName());
-				} else if (component instanceof PrimitiveType primitiveComponent) {
-					mv.visitIntInsn(Opcodes.NEWARRAY, primitiveComponent.kind());
-				}
+			ClassType component = arrayType.componentType();
+			if (component instanceof ObjectType objectComponent) {
+				mv.visitTypeInsn(Opcodes.ANEWARRAY, objectComponent.internalName());
+			} else if (component instanceof PrimitiveType primitiveComponent) {
+				mv.visitIntInsn(Opcodes.NEWARRAY, primitiveComponent.kind());
 			}
 		}
 	}
