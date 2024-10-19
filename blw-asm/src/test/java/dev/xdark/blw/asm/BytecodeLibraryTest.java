@@ -1,7 +1,6 @@
-package dev.xdark.blw;
+package dev.xdark.blw.asm;
 
-import dev.xdark.blw.asm.AsmBytecodeLibrary;
-import dev.xdark.blw.asm.ClassWriterProvider;
+import dev.xdark.blw.BytecodeLibrary;
 import dev.xdark.blw.classfile.ClassBuilder;
 import dev.xdark.blw.classfile.ClassFileView;
 import dev.xdark.blw.classfile.generic.GenericClassBuilder;

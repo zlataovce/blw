@@ -21,7 +21,4 @@ module dev.xdark.blw {
 	exports dev.xdark.blw.type;
 	exports dev.xdark.blw.util;
 	exports dev.xdark.blw.version;
-
-	requires static org.objectweb.asm;
-	opens dev.xdark.blw.asm;
 }
