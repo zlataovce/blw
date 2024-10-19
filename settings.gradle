@@ -1,3 +1,4 @@
 rootProject.name = 'blw'
 include 'blw-core'
 include 'blw-asm'
+include 'blw-cafedude'

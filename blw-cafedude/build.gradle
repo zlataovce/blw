@@ -1,0 +1,4 @@
+dependencies {
+    api project(':blw-core')
+    implementation 'com.github.Col-E.CAFED00D:cafedude-tree:2.1.2'
+}
